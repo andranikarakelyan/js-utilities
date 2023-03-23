@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "module": "CommonJS",
+    "target": "ES2022",
+    "moduleResolution": "node",
+    "noImplicitAny": true,
+    "strict": true,
+    "outDir": "dist",
+    "lib": [
+      "ES2020"
+    ]
+  }
+}

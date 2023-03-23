@@ -1,0 +1,29 @@
+{
+  "name": "js-utilities",
+  "version": "1.0.0",
+  "description": "Javascript utilities",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andranikarakelyan/js-utilities.git"
+  },
+  "keywords": [],
+  "author": {
+    "email": "andranik.arakelyan.work@gmail.com",
+    "name": "Andranik Arakelyan"
+  },
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/andranikarakelyan/js-utilities/issues"
+  },
+  "homepage": "https://github.com/andranikarakelyan/js-utilities#readme",
+  "devDependencies": {
+    "typescript": "^5.0.2"
+  },
+  "dependencies": {
+    "@types/node": "^18.15.5"
+  }
+}
