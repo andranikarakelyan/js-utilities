@@ -1,4 +1,4 @@
-export type ISortingAlgorithm = 'bubble';
+export type ISortingAlgorithm = 'bubble' | 'selection';
 
 export type ISortingPredicate<T> = ( a: T, b: T ) => number;
 
@@ -7,6 +7,9 @@ export function sort<T>( arr: Array<T>, predicate: ISortingPredicate<T>, algorit
   switch ( algorithm ) {
     case "bubble":
       bubble_sort_alg( arr, predicate );
+      break;
+    case "selection":
+      selection_sort_alg( arr, predicate );
       break;
     default:
       throw new Error( `Unknown algorithm "${ algorithm }"` );
@@ -38,4 +41,28 @@ function bubble_sort_alg<T>( arr: Array<T>, predicate: ISortingPredicate<T> ): A
   return arr;
 }
 
+function selection_sort_alg<T>(arr: Array<T>, predicate: ISortingPredicate<T>): Array<T> {
 
+  for (let index_offset = 0; index_offset < arr.length - 1; ++index_offset) {
+
+    let min_value: null | T = null;
+    let min_index: null | number = null;
+
+    for (let i = index_offset; i < arr.length; ++i) {
+
+      if (min_value === null || predicate( arr[i], min_value ) < 0) {
+        min_value = arr[i];
+        min_index = i;
+      }
+
+    }
+
+    const k = arr[index_offset];
+    arr[index_offset] = arr[min_index as number];
+    arr[min_index as number] = k;
+
+  }
+
+  return arr;
+
+}
