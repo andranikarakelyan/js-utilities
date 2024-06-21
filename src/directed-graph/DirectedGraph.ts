@@ -25,9 +25,9 @@ export class DirectedGraph<T> {
     if (idSet.size !== this.vertices.length)
       throw new Error(`Some vertices have duplicate IDs`);
 
-    this.edges.forEach(e=>{
+    this.edges.forEach(e => {
 
-      if(e.startVertexId===e.endVertexId)
+      if (e.startVertexId === e.endVertexId)
         throw new Error(`Some edges are cyclic`);
 
       // Will throw error, when there are no vertices with such ID
@@ -56,7 +56,7 @@ export class DirectedGraph<T> {
    */
   public findStartVertices(): DirectedGraphVertex<T>[] {
     return this.vertices
-      .filter(v => !v.edges
+      .filter(v => v.edges.length !== 0 && !v.edges
         .some(e => e.endVertexId === v.id)
       );
   }
@@ -66,9 +66,31 @@ export class DirectedGraph<T> {
    */
   public findEndVertices(): DirectedGraphVertex<T>[] {
     return this.vertices
-      .filter(v => !v.edges
+      .filter(v => v.edges.length !== 0 && !v.edges
         .some(e => e.startVertexId === v.id)
       );
   }
 
+  /**
+   * Iterates through vertices starting from a specific vertex using "Depth First Search" algorithm.
+   * You can skip iterations from specific vertices ( see @param predicate )
+   * @param startVertexId Start vertex ID
+   * @param predicate Callback, which will be called for each vertex.
+   * Return **true** to skip iterations which are coming out from current vertex
+   */
+  public dfsFrom(startVertexId: string, predicate: (vertex: DirectedGraphVertex<T>) => boolean) {
+    const startVertex = this.getVertexById(startVertexId);
+
+    const dfsStep = (vertex: DirectedGraphVertex<T>) => {
+
+      if (predicate(vertex)) return;
+
+      vertex.edges.filter(e => e.startVertexId === vertex.id)
+        .map(e => this.getVertexById(e.endVertexId))
+        .forEach(v => dfsStep(v));
+
+    }
+
+    dfsStep(startVertex);
+  }
 }
