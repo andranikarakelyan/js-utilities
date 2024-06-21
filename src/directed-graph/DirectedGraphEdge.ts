@@ -1,18 +1,14 @@
-import {DirectedGraphVertice} from "./DirectedGraphVertice";
-import {ObjectWithId} from "./types";
+export class DirectedGraphEdge {
 
-
-export class DirectedGraphEdge<T extends ObjectWithId> {
-
-  public startVertice: DirectedGraphVertice<T> | null;
-  public endVertice: DirectedGraphVertice<T> | null;
+  public startVertexId: string;
+  public endVertexId: string;
 
   public constructor(
-    startVertice: DirectedGraphVertice<T> | null,
-    endVertice: DirectedGraphVertice<T> | null
+    startVertexId:string,
+    endVertexId: string,
   ) {
-    this.startVertice = startVertice;
-    this.endVertice = endVertice;
+    this.startVertexId = startVertexId;
+    this.endVertexId = endVertexId;
   }
 
 }
