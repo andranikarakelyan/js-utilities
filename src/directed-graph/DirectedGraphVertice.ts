@@ -1,7 +1,8 @@
 import {DirectedGraphEdge} from "./DirectedGraphEdge";
+import {ObjectWithId} from "./types";
 
 
-export class DirectedGraphVertice<T> {
+export class DirectedGraphVertice<T extends ObjectWithId> {
 
   public data?: T | null;
   public edges: DirectedGraphEdge<T>[];
