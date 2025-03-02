@@ -8,6 +8,8 @@ test('randomInt: Return random integer value', () => {
 
   expect(typeof result).toBe("number");
   expect(result % 1).toBe(0);
+  expect(result).toBeGreaterThanOrEqual(min);
+  expect(result).toBeLessThan(max);
 });
 
 //FIXME: This test should be improved
