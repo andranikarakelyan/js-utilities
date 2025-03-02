@@ -1,5 +1,5 @@
 {
-  "name": "js-utilities",
+  "name": "@andranik.arakelyan/js-utilities",
   "version": "0.0.1",
   "description": "Javascript utilities",
   "main": "dist/index.js",
@@ -17,7 +17,7 @@
     "email": "andranik.arakelyan.me@gmail.com",
     "name": "Andranik Arakelyan"
   },
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/andranikarakelyan/js-utilities/issues"
   },
