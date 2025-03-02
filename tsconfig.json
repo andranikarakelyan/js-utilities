@@ -4,9 +4,18 @@
     "target": "ES2022",
     "moduleResolution": "node",
     "strict": true,
-    "outDir": "dist",
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "declaration": true,
     "lib": [
       "ES2023"
-    ]
-  }
+    ],
+  },
+  "exclude": [
+    "./jest.config.js",
+    "./src/**/*.spec.ts"
+  ],
+  "include": [
+    "./src/**/*.ts"
+  ]
 }

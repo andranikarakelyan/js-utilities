@@ -1,8 +1,9 @@
 {
   "name": "js-utilities",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Javascript utilities",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
     "test": "jest"
