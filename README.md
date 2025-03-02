@@ -4,7 +4,7 @@
 [![Build Status](https://travis-ci.com/andranik-a/js-utilities.svg?branch=main)](https://travis-ci.com/andranik-a/js-utilities)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Utility functions for all JavaScript/TypeScript environments
+Utility functions for all JavaScript/TypeScript environments.
 
 ## Installation
 To install the package, use npm:
@@ -38,7 +38,8 @@ console.log( 'result', result ); // [5]
 Contributions are welcome! Please open an issue or submit a pull request.
 
 ## Links
-[NPM page](https://www.npmjs.com/package/@andranik.arakelyan/js-utilities)
+[NPM page](https://www.npmjs.com/package/@andranik-arakelyan/js-utilities)
+
 [Git repository](https://github.com/andranikarakelyan/js-utilities)
 
 ## License
