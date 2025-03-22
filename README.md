@@ -33,6 +33,7 @@ console.log( 'result', result ); // [5]
 - arraySubtract
 - randomInt
 - randomBoolean
+- currentCodeInfo
 
 ## Contributing
 Contributions are welcome! Please open an issue or submit a pull request.
