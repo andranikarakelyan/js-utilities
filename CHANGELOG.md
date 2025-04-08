@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [0.1.0] - 2025-04-08
+
+### Added
+
+- arraySplit function
+
 ## [0.0.2] - 2025-03-22
 
 ### Added
@@ -26,6 +32,7 @@ and this project adheres to [Semantic Versioning].
 [semantic versioning]: https://semver.org/spec/v2.0.0.html
 
 <!-- Versions -->
-[unreleased]: https://github.com/andranikarakelyan/js-utilities/compare/v0.0.2...HEAD
+[unreleased]: https://github.com/andranikarakelyan/js-utilities/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.0.2...v0.1.0
 [0.0.2]: https://github.com/andranikarakelyan/js-utilities/compare/v0.0.1...v0.0.2
 [0.0.1]: https://github.com/andranikarakelyan/js-utilities/releases/tag/v0.0.1
