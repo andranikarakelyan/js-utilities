@@ -18,7 +18,23 @@
     "type": "git",
     "url": "git+https://github.com/andranikarakelyan/js-utilities.git"
   },
-  "keywords": [],
+  "keywords": [
+    "javascript",
+    "typescript",
+    "utilities",
+    "helper-functions",
+    "commonjs",
+    "es2022",
+    "es2023",
+    "nodejs",
+    "npm-package",
+    "js-tools",
+    "typescript-library",
+    "utility-functions",
+    "toolkit",
+    "code-reuse",
+    "modular"
+  ],
   "author": {
     "email": "andranik.arakelyan.work@gmail.com",
     "name": "Andranik Arakelyan"
