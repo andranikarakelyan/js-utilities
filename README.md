@@ -34,6 +34,7 @@ console.log( 'result', result ); // [5]
 - randomInt
 - randomBoolean
 - currentCodeInfo
+- arraySplit
 
 ## Contributing
 Contributions are welcome! Please open an issue or submit a pull request.
