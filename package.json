@@ -12,7 +12,8 @@
     "prepublishOnly": "npm test && npm run build && npm run check-git-clean",
     "build": "rimraf dist && tsc",
     "test": "jest",
-    "check-git-clean": "git diff --quiet || (echo '❌ Commit your changes first!' && exit 1)"
+    "check-git-clean": "git diff --quiet || (echo '❌ Commit your changes first!' && exit 1)",
+    "docs:build": "typedoc --out .docs"
   },
   "repository": {
     "type": "git",
@@ -50,6 +51,7 @@
     "rimraf": "^6.0.1",
     "ts-jest": "^29.2.6",
     "ts-node": "^10.9.2",
+    "typedoc": "^0.28.3",
     "typescript": "^5.8.2"
   }
 }

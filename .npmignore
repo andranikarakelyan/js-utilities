@@ -1,3 +1,16 @@
+# gitignore
 node_modules
-jest.config.ts
+dist
+.idea
+package-lock.json
+.docs
+*.tgz
+
+# npmignore
 examples
+jest.config.ts
+.gitignore
+CHANGELOG.md
+src
+*.map
+tsconfig.json
