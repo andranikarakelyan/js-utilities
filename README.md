@@ -115,6 +115,27 @@ async function delayedOperation() {
 }
 ```
 
+#### retry
+Retries an async function with configurable attempts and exponential backoff.
+```ts
+import { retry } from '@andranik-arakelyan/js-utilities';
+
+// Basic usage with default options (3 attempts)
+const data = await retry(() => fetchData());
+
+// With custom retry configuration
+const result = await retry(
+  () => riskyOperation(),
+  { 
+    attempts: 5,              // Maximum attempts including initial attempt
+    delay: 1000,              // Initial delay in milliseconds
+    backoffFactor: 2,         // Multiply delay by this factor after each attempt
+    retryIf: (err) => err instanceof NetworkError,  // Only retry specific errors
+    onRetry: (err, attempt) => console.log(`Retry attempt ${attempt}`) // Track retries
+  }
+);
+```
+
 ## Contributing
 Contributions are welcome! Please open an issue or submit a pull request.
 

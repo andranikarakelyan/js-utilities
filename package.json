@@ -1,6 +1,6 @@
 {
   "name": "@andranik-arakelyan/js-utilities",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "Javascript utilities",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -35,7 +35,17 @@
     "utility-functions",
     "toolkit",
     "code-reuse",
-    "modular"
+    "modular",
+    "async",
+    "promises",
+    "retry",
+    "backoff",
+    "array-manipulation",
+    "wait",
+    "delay",
+    "random-generation",
+    "debugging",
+    "runtime-info"
   ],
   "author": {
     "email": "andranik.arakelyan.work@gmail.com",
