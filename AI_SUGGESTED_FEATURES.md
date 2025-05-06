@@ -141,14 +141,6 @@ function toObject<T, K extends string | number | symbol, V>(
 ): Record<K, V>
 ```
 
-### `shuffle`
-```ts
-/**
- * Returns a shuffled version of an array using Fisher-Yates algorithm
- */
-function shuffle<T>(array: T[]): T[]
-```
-
 ### `intersection`
 ```ts
 /**

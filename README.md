@@ -49,6 +49,17 @@ const result2 = arraySplit([1, 2, 3, 4, 5, 6], (item) => item % 2 === 0);
 console.log(result2); // [[1], [3], [5]]
 ```
 
+#### shuffle
+Randomly shuffles an array using the Fisher-Yates algorithm. This algorithm is superior to naive shuffling approaches (like sorting with a random comparator) because it guarantees a truly random permutation with equal probability for each possible outcome and has optimal O(n) time complexity.
+```ts
+import { shuffle } from '@andranik-arakelyan/js-utilities';
+
+const array = [1, 2, 3, 4, 5];
+const shuffled = shuffle(array);
+console.log(shuffled); // Example output: [3, 1, 5, 2, 4]
+console.log(array); // Original array remains unchanged: [1, 2, 3, 4, 5]
+```
+
 ### Random Utilities
 
 #### randomInt
