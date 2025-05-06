@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [0.4.0] - 2025-05-06
+
+### Added
+
+- `shuffle` function in Array utilities module for randomly reordering array elements
+  - Implements the Fisher-Yates (Knuth) shuffle algorithm
+  - Offers efficient in-place shuffling with O(n) time complexity
+  - Returns a new shuffled array without modifying the original
+  - Fully tested with Jest for randomness and distribution
+
+### Changed
+
+- Added PUBLISHING.md documentation with guidelines for release process
+- Updated .npmignore configuration for better package management
+- Added AI_SUGGESTED_FEATURES.md with potential future development ideas
+
 ## [0.3.0] - 2025-04-29
 
 ### Added
@@ -68,7 +84,8 @@ and this project adheres to [Semantic Versioning].
 [semantic versioning]: https://semver.org/spec/v2.0.0.html
 
 <!-- Versions -->
-[unreleased]: https://github.com/andranikarakelyan/js-utilities/compare/v0.3.0...HEAD
+[unreleased]: https://github.com/andranikarakelyan/js-utilities/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.2.2...v0.3.0
 [0.2.2]: https://github.com/andranikarakelyan/js-utilities/compare/v0.2.1...v0.2.2
 [0.2.1]: https://github.com/andranikarakelyan/js-utilities/compare/v0.1.0...v0.2.1
