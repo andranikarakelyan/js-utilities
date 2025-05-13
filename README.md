@@ -5,6 +5,30 @@
 
 Utility functions for all JavaScript/TypeScript environments.
 
+## Table of Contents
+
+- [Installation](#installation)
+- [Usage](#usage)
+- [Features](#features)
+  - [Data Structures](#data-structures)
+    - [Stack](#stackt)
+    - [Queue](#queuet)
+  - [Array Utilities](#array-utilities)
+    - [arraySubtract](#arraysubtract)
+    - [arraySplit](#arraysplit)
+    - [shuffle](#shuffle)
+  - [Random Utilities](#random-utilities)
+    - [randomInt](#randomint)
+    - [randomBoolean](#randomboolean)
+  - [Runtime Utilities](#runtime-utilities)
+    - [currentCodeInfo](#currentcodeinfo)
+  - [Promise Utilities](#promise-utilities)
+    - [wait](#wait)
+    - [retry](#retry)
+- [Contributing](#contributing)
+- [Links](#links)
+- [License](#license)
+
 ## Installation
 To install the package, use npm:
 ```sh
@@ -21,6 +45,46 @@ console.log( 'result', result ); // [5]
 ```
 
 ## Features
+
+### Data Structures
+
+#### Stack<T>
+A generic type-safe implementation of a Stack data structure with LIFO (Last-In-First-Out) operations.
+```ts
+import { Stack } from '@andranik-arakelyan/js-utilities';
+
+// Create a new stack of numbers
+const stack = new Stack<number>();
+
+// Push elements onto the stack
+stack.push(1);
+stack.push(2);
+stack.push(3);
+
+console.log(stack.peek()); // 3 (returns the top element without removing it)
+console.log(stack.pop());  // 3 (removes and returns the top element)
+console.log(stack.size()); // 2 (returns the current number of elements)
+console.log(stack.isEmpty()); // false
+```
+
+#### Queue<T>
+A generic type-safe implementation of a Queue data structure with FIFO (First-In-First-Out) operations.
+```ts
+import { Queue } from '@andranik-arakelyan/js-utilities';
+
+// Create a new queue of strings
+const queue = new Queue<string>();
+
+// Enqueue elements
+queue.enqueue("first");
+queue.enqueue("second");
+queue.enqueue("third");
+
+console.log(queue.peek()); // "first" (returns the front element without removing it)
+console.log(queue.dequeue()); // "first" (removes and returns the front element)
+console.log(queue.size()); // 2 (returns the current number of elements)
+console.log(queue.isEmpty()); // false
+```
 
 ### Array Utilities
 
