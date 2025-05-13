@@ -452,25 +452,6 @@ function createDebouncedListener<K extends keyof HTMLElementEventMap>(
 
 Implementing useful data structures not available in standard JavaScript.
 
-### `Stack<T>` / `Queue<T>`
-```ts
-class Stack<T> {
-  push(item: T): number;
-  pop(): T | undefined;
-  peek(): T | undefined;
-  isEmpty(): boolean;
-  size(): number;
-}
-
-class Queue<T> {
-  enqueue(item: T): number;
-  dequeue(): T | undefined;
-  peek(): T | undefined;
-  isEmpty(): boolean;
-  size(): number;
-}
-```
-
 ### `LRUCache<K, V>`
 ```ts
 /**
