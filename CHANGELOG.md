@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [0.5.0] - 2025-05-13
+
+### Added
+
+- `Stack<T>` and `Queue<T>` data structures in data-structures module
+  - Type-safe generic implementations for Stack and Queue
+  - Stack provides LIFO (Last-In-First-Out) operations
+  - Queue provides FIFO (First-In-First-Out) operations
+  - Comprehensive test suite validating correct behavior
+
 ## [0.4.0] - 2025-05-06
 
 ### Added
@@ -84,7 +94,8 @@ and this project adheres to [Semantic Versioning].
 [semantic versioning]: https://semver.org/spec/v2.0.0.html
 
 <!-- Versions -->
-[unreleased]: https://github.com/andranikarakelyan/js-utilities/compare/v0.4.0...HEAD
+[unreleased]: https://github.com/andranikarakelyan/js-utilities/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.2.2...v0.3.0
 [0.2.2]: https://github.com/andranikarakelyan/js-utilities/compare/v0.2.1...v0.2.2

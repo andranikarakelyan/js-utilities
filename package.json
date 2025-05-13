@@ -1,6 +1,6 @@
 {
   "name": "@andranik-arakelyan/js-utilities",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Javascript utilities",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -52,7 +52,16 @@
     "stack-trace",
     "type-safe",
     "array-utils",
-    "promise-utils"
+    "promise-utils",
+    "data-structures",
+    "stack",
+    "queue",
+    "fifo",
+    "lifo",
+    "collection",
+    "generic-types",
+    "typescript-generics",
+    "algorithms"
   ],
   "author": {
     "email": "andranik.arakelyan.work@gmail.com",
