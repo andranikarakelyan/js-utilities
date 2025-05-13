@@ -7,7 +7,6 @@ package-lock.json
 *.tgz
 
 # npmignore
-examples
 jest.config.ts
 .gitignore
 CHANGELOG.md
