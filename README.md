@@ -25,6 +25,7 @@ Utility functions for all JavaScript/TypeScript environments.
   - [Function Utilities](#function-utilities)
     - [once](#once)
     - [debounce](#debounce)
+    - [throttle](#throttle)
   - [Promise Utilities](#promise-utilities)
     - [wait](#wait)
     - [retry](#retry)
@@ -235,6 +236,31 @@ const calculateLayout = debounce((width: number, height: number): string => {
 
 // Cancel a pending debounced call if needed
 handleInput.cancel();
+```
+
+#### throttle
+Creates a throttled function that only invokes the provided function at most once per every specified wait milliseconds, regardless of how many times it's called. This is useful when you want to limit the rate at which a function is executed, such as during scroll events or continuous button clicks.
+
+```ts
+import { throttle } from '@andranik-arakelyan/js-utilities';
+
+// Create a throttled version of a function
+const handleScroll = throttle(() => {
+  // This will execute at most once every 300ms, even if scrolling continuously
+  console.log('Processing scroll event');
+}, 300);
+
+// Attach to a scroll event
+window.addEventListener('scroll', handleScroll);
+
+// With proper TypeScript typing
+const updatePosition = throttle((x: number, y: number): string => {
+  // Update UI based on position, but not too frequently
+  return `${x},${y}`;
+}, 100);
+
+// Cancel a pending throttled call if needed
+handleScroll.cancel();
 ```
 
 ### Promise Utilities
