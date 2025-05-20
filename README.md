@@ -22,6 +22,8 @@ Utility functions for all JavaScript/TypeScript environments.
     - [randomBoolean](#randomboolean)
   - [Runtime Utilities](#runtime-utilities)
     - [currentCodeInfo](#currentcodeinfo)
+  - [Function Utilities](#function-utilities)
+    - [once](#once)
   - [Promise Utilities](#promise-utilities)
     - [wait](#wait)
     - [retry](#retry)
@@ -167,6 +169,45 @@ function exampleFunction() {
 }
 
 exampleFunction();
+```
+
+### Function Utilities
+
+#### once
+Creates a function that ensures the original function is only ever called once, regardless of how many times the returned function is called. Subsequent calls to the wrapped function return the result of the first invocation.
+
+```ts
+import { once } from '@andranik-arakelyan/js-utilities';
+
+// Create a function that will only execute once
+const initializeApp = once(() => {
+  console.log('App initialized!');
+  return 'Initialization complete';
+});
+
+// First call - function executes
+const result1 = initializeApp(); // Logs: 'App initialized!'
+
+// Subsequent calls - function is not executed again
+const result2 = initializeApp(); // No log output
+
+// Both calls return the same result
+console.log(result1 === result2); // true
+
+// Works with parameters and preserves this context
+const obj = {
+  data: 'example',
+  process: once(function(this: { data: string }, prefix: string) {
+    console.log(`Processing ${prefix} ${this.data}`);
+    return `${prefix}-${this.data}`;
+  })
+};
+
+// First call with parameters
+obj.process('test'); // Logs: 'Processing test example', returns: 'test-example'
+
+// Second call - function is not executed again even with different parameters
+obj.process('another'); // No log output, still returns: 'test-example'
 ```
 
 ### Promise Utilities
