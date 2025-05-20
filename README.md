@@ -213,7 +213,7 @@ obj.process('another'); // No log output, still returns: 'test-example'
 ```
 
 #### debounce
-Creates a debounced function that delays invoking the provided function until after the specified wait time has elapsed since the last time it was invoked. This is particularly useful when dealing with events that fire rapidly, such as window resizing, scrolling, or keystrokes.
+Creates a debounced function that delays invoking the provided function until after the specified wait time has elapsed since the last time it was invoked. The function will only execute once the wait period has elapsed with no new calls. This is particularly useful when dealing with events that fire rapidly, such as window resizing, scrolling, or keystrokes, when you want to execute the handler only after the user has stopped the action.
 
 ```ts
 import { debounce } from '@andranik-arakelyan/js-utilities';
@@ -227,6 +227,12 @@ const handleInput = debounce((value) => {
 
 // Attach to an input event
 inputElement.addEventListener('input', e => handleInput(e.target.value));
+
+// Multiple rapid calls reset the timer each time
+handleInput('a'); // Starts the timer
+handleInput('ab'); // Cancels previous timer, starts a new one
+handleInput('abc'); // Cancels previous timer, starts a new one
+// After 300ms of no calls, the function executes with 'abc'
 
 // With proper TypeScript typing
 const calculateLayout = debounce((width: number, height: number): string => {
