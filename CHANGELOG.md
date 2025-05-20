@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [0.6.0] - 2025-05-20
+
+### Added
+
+- New `function` utilities module enriched with several functions:
+  - `throttle` function to limit how often a function can be called
+  - `debounce` function to delay function execution until after a cooldown period
+  - `once` function to ensure a function is only executed a single time
+
+### Changed
+
+- Removed AI_SUGGESTED_FEATURES.md file from the project
+
 ## [0.5.0] - 2025-05-13
 
 ### Added
@@ -94,7 +107,8 @@ and this project adheres to [Semantic Versioning].
 [semantic versioning]: https://semver.org/spec/v2.0.0.html
 
 <!-- Versions -->
-[unreleased]: https://github.com/andranikarakelyan/js-utilities/compare/v0.5.0...HEAD
+[unreleased]: https://github.com/andranikarakelyan/js-utilities/compare/v0.6.0...HEAD
+[0.6.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.2.2...v0.3.0
