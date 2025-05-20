@@ -24,6 +24,7 @@ Utility functions for all JavaScript/TypeScript environments.
     - [currentCodeInfo](#currentcodeinfo)
   - [Function Utilities](#function-utilities)
     - [once](#once)
+    - [debounce](#debounce)
   - [Promise Utilities](#promise-utilities)
     - [wait](#wait)
     - [retry](#retry)
@@ -208,6 +209,32 @@ obj.process('test'); // Logs: 'Processing test example', returns: 'test-example'
 
 // Second call - function is not executed again even with different parameters
 obj.process('another'); // No log output, still returns: 'test-example'
+```
+
+#### debounce
+Creates a debounced function that delays invoking the provided function until after the specified wait time has elapsed since the last time it was invoked. This is particularly useful when dealing with events that fire rapidly, such as window resizing, scrolling, or keystrokes.
+
+```ts
+import { debounce } from '@andranik-arakelyan/js-utilities';
+
+// Create a debounced version of a function
+const handleInput = debounce((value) => {
+  // This will only execute after the user has stopped typing for 300ms
+  console.log('Processing input:', value);
+  performSearch(value);
+}, 300);
+
+// Attach to an input event
+inputElement.addEventListener('input', e => handleInput(e.target.value));
+
+// With proper TypeScript typing
+const calculateLayout = debounce((width: number, height: number): string => {
+  // Expensive calculation that should not run on every resize event
+  return `${width}x${height}`;
+}, 100);
+
+// Cancel a pending debounced call if needed
+handleInput.cancel();
 ```
 
 ### Promise Utilities
