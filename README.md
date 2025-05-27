@@ -17,6 +17,7 @@ Utility functions for all JavaScript/TypeScript environments.
     - [arraySubtract](#arraysubtract)
     - [arraySplit](#arraysplit)
     - [shuffle](#shuffle)
+    - [unique](#unique)
   - [Random Utilities](#random-utilities)
     - [randomInt](#randomint)
     - [randomBoolean](#randomboolean)
@@ -126,6 +127,25 @@ const array = [1, 2, 3, 4, 5];
 const shuffled = shuffle(array);
 console.log(shuffled); // Example output: [3, 1, 5, 2, 4]
 console.log(array); // Original array remains unchanged: [1, 2, 3, 4, 5]
+```
+
+#### unique
+Returns a new array with duplicate values removed. Optionally accepts a function to determine the key for uniqueness comparison.
+```ts
+import { unique } from '@andranik-arakelyan/js-utilities';
+
+// Remove duplicates from primitive values
+const numbers = [1, 2, 2, 3, 1, 4];
+console.log(unique(numbers)); // [1, 2, 3, 4]
+
+// With objects using a custom key selector
+const users = [
+  { id: 1, name: 'Alice' },
+  { id: 2, name: 'Bob' },
+  { id: 1, name: 'Alice (duplicate)' }
+];
+const uniqueUsers = unique(users, user => user.id);
+console.log(uniqueUsers); // [{ id: 1, name: 'Alice' }, { id: 2, name: 'Bob' }]
 ```
 
 ### Random Utilities
