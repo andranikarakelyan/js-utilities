@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [0.8.0] - 2025-06-03
+
+### Added
+
+- New object utility function:
+  - `deepClone` function for creating deep copies of objects and arrays
+  - Handles circular references and various JavaScript built-in types
+  - Preserves type information for Date, RegExp, Set, and Map objects
+
 ## [0.7.0] - 2025-05-27
 
 ### Added
@@ -116,7 +125,8 @@ and this project adheres to [Semantic Versioning].
 [semantic versioning]: https://semver.org/spec/v2.0.0.html
 
 <!-- Versions -->
-[unreleased]: https://github.com/andranikarakelyan/js-utilities/compare/v0.7.0...HEAD
+[unreleased]: https://github.com/andranikarakelyan/js-utilities/compare/v0.8.0...HEAD
+[0.8.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.7.0...v0.8.0
 [0.7.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.4.0...v0.5.0
