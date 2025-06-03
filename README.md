@@ -18,6 +18,8 @@ Utility functions for all JavaScript/TypeScript environments.
     - [arraySplit](#arraysplit)
     - [shuffle](#shuffle)
     - [unique](#unique)
+  - [Object Utilities](#object-utilities)
+    - [deepClone](#deepclone)
   - [Random Utilities](#random-utilities)
     - [randomInt](#randomint)
     - [randomBoolean](#randomboolean)
@@ -146,6 +148,45 @@ const users = [
 ];
 const uniqueUsers = unique(users, user => user.id);
 console.log(uniqueUsers); // [{ id: 1, name: 'Alice' }, { id: 2, name: 'Bob' }]
+```
+
+### Object Utilities
+
+#### deepClone
+Creates a deep clone of an object or array, creating a new copy of all nested objects and arrays. This function handles circular references and various JavaScript built-in types.
+```ts
+import { deepClone } from '@andranik-arakelyan/js-utilities';
+
+// Simple object cloning
+const obj = { a: 1, b: { c: 2 } };
+const clone = deepClone(obj);
+clone.b.c = 3;
+console.log(obj.b.c); // Still 2
+
+// Handling arrays and nested structures
+const arr = [1, { x: [2, 3] }];
+const cloneArr = deepClone(arr);
+cloneArr[1].x[0] = 10;
+console.log(arr[1].x[0]); // Still 2
+
+// Handling circular references
+const circular = { a: 1 };
+circular.self = circular;
+const cloneCircular = deepClone(circular);
+console.log(cloneCircular.self === cloneCircular); // true
+
+// Handling built-in types
+const data = {
+  date: new Date(),
+  regex: /test/g,
+  set: new Set([1, 2, 3]),
+  map: new Map([['key', 'value']])
+};
+const cloneData = deepClone(data);
+console.log(cloneData.date instanceof Date); // true
+console.log(cloneData.regex instanceof RegExp); // true
+console.log(cloneData.set instanceof Set); // true
+console.log(cloneData.map instanceof Map); // true
 ```
 
 ### Random Utilities
