@@ -18,6 +18,7 @@ Utility functions for all JavaScript/TypeScript environments.
     - [arraySplit](#arraysplit)
     - [shuffle](#shuffle)
     - [unique](#unique)
+    - [groupBy](#groupby)
   - [Object Utilities](#object-utilities)
     - [deepClone](#deepclone)
   - [Random Utilities](#random-utilities)
@@ -148,6 +149,42 @@ const users = [
 ];
 const uniqueUsers = unique(users, user => user.id);
 console.log(uniqueUsers); // [{ id: 1, name: 'Alice' }, { id: 2, name: 'Bob' }]
+```
+
+#### groupBy
+Groups array elements by a key selector function. Returns a Map where keys are the result of the key selector function and values are arrays of elements that share the same key.
+```ts
+import { groupBy } from '@andranik-arakelyan/js-utilities';
+
+// Group numbers by even/odd
+const numbers = [1, 2, 3, 4, 5, 6];
+const grouped = groupBy(numbers, n => n % 2 === 0 ? 'even' : 'odd');
+console.log(grouped); // Map { 'odd' => [1, 3, 5], 'even' => [2, 4, 6] }
+
+// Group objects by property
+const users = [
+  { name: 'Alice', department: 'Engineering' },
+  { name: 'Bob', department: 'Marketing' },
+  { name: 'Charlie', department: 'Engineering' }
+];
+const byDepartment = groupBy(users, user => user.department);
+console.log(byDepartment);
+// Map { 
+//   'Engineering' => [
+//     { name: 'Alice', department: 'Engineering' }, 
+//     { name: 'Charlie', department: 'Engineering' }
+//   ],
+//   'Marketing' => [{ name: 'Bob', department: 'Marketing' }]
+// }
+
+// Group by multiple criteria using composite keys
+const products = [
+  { name: 'Laptop', category: 'Electronics', inStock: true },
+  { name: 'Phone', category: 'Electronics', inStock: false },
+  { name: 'Desk', category: 'Furniture', inStock: true }
+];
+const byStatus = groupBy(products, p => `${p.category}-${p.inStock}`);
+// Groups by category and stock status combined
 ```
 
 ### Object Utilities
