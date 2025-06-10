@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [0.9.0] - 2025-06-10
+
+### Added
+
+- New array utility function:
+  - `groupBy` function to group array elements by a key selector function
+  - Returns a Map where keys are the result of the key selector function and values are arrays of grouped elements
+  - Supports primitive values and complex object grouping with type safety
+  - Handles empty arrays gracefully
+  - Comprehensive test suite with edge cases and multiple usage examples
+
 ## [0.8.0] - 2025-06-03
 
 ### Added
@@ -125,7 +136,8 @@ and this project adheres to [Semantic Versioning].
 [semantic versioning]: https://semver.org/spec/v2.0.0.html
 
 <!-- Versions -->
-[unreleased]: https://github.com/andranikarakelyan/js-utilities/compare/v0.8.0...HEAD
+[unreleased]: https://github.com/andranikarakelyan/js-utilities/compare/v0.9.0...HEAD
+[0.9.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.8.0...v0.9.0
 [0.8.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.7.0...v0.8.0
 [0.7.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.5.0...v0.6.0
