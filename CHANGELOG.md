@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [0.10.0] - 2025-06-17
+
+### Added
+
+- New array utility function:
+  - `chunk` function to split arrays into chunks of specified size
+  - Handles arrays of any type with full TypeScript support
+  - Supports edge cases like empty arrays and chunk sizes larger than array length
+  - Input validation with descriptive error messages
+  - Maintains immutability by returning new arrays
+  - Comprehensive test suite with edge cases and type safety validation
+
 ## [0.9.0] - 2025-06-10
 
 ### Added
@@ -136,7 +148,8 @@ and this project adheres to [Semantic Versioning].
 [semantic versioning]: https://semver.org/spec/v2.0.0.html
 
 <!-- Versions -->
-[unreleased]: https://github.com/andranikarakelyan/js-utilities/compare/v0.9.0...HEAD
+[unreleased]: https://github.com/andranikarakelyan/js-utilities/compare/v0.10.0...HEAD
+[0.10.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.9.0...v0.10.0
 [0.9.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.8.0...v0.9.0
 [0.8.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.7.0...v0.8.0
 [0.7.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.6.0...v0.7.0
