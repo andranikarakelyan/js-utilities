@@ -19,6 +19,7 @@ Utility functions for all JavaScript/TypeScript environments.
     - [shuffle](#shuffle)
     - [unique](#unique)
     - [groupBy](#groupby)
+    - [chunk](#chunk)
   - [Object Utilities](#object-utilities)
     - [deepClone](#deepclone)
   - [Random Utilities](#random-utilities)
@@ -185,6 +186,40 @@ const products = [
 ];
 const byStatus = groupBy(products, p => `${p.category}-${p.inStock}`);
 // Groups by category and stock status combined
+```
+
+#### chunk
+Splits an array into chunks of a specified size. The last chunk may contain fewer elements if the array length is not evenly divisible by the chunk size.
+```ts
+import { chunk } from '@andranik-arakelyan/js-utilities';
+
+// Basic usage with numbers
+const numbers = [1, 2, 3, 4, 5, 6];
+const chunked = chunk(numbers, 2);
+console.log(chunked); // [[1, 2], [3, 4], [5, 6]]
+
+// Handle arrays not evenly divisible
+const oddLength = [1, 2, 3, 4, 5];
+const chunkedOdd = chunk(oddLength, 2);
+console.log(chunkedOdd); // [[1, 2], [3, 4], [5]]
+
+// With objects
+const users = [
+  { id: 1, name: 'Alice' },
+  { id: 2, name: 'Bob' },
+  { id: 3, name: 'Charlie' },
+  { id: 4, name: 'Diana' }
+];
+const userChunks = chunk(users, 2);
+console.log(userChunks);
+// [
+//   [{ id: 1, name: 'Alice' }, { id: 2, name: 'Bob' }],
+//   [{ id: 3, name: 'Charlie' }, { id: 4, name: 'Diana' }]
+// ]
+
+// Edge cases
+console.log(chunk([], 2)); // []
+console.log(chunk([1, 2, 3], 5)); // [[1, 2, 3]]
 ```
 
 ### Object Utilities
