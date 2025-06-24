@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [0.11.0] - 2025-06-24
+
+### Added
+
+- New promise utility function:
+  - `safeAsync` function for graceful async error handling
+  - Returns standardized result object instead of throwing exceptions
+  - Provides type-safe error handling with `SafeAsyncResult<T>` type
+  - Includes comprehensive test suite with 8 test cases covering various scenarios
+  - Follows existing code style and patterns
+
 ## [0.10.0] - 2025-06-17
 
 ### Added
@@ -148,7 +159,8 @@ and this project adheres to [Semantic Versioning].
 [semantic versioning]: https://semver.org/spec/v2.0.0.html
 
 <!-- Versions -->
-[unreleased]: https://github.com/andranikarakelyan/js-utilities/compare/v0.10.0...HEAD
+[unreleased]: https://github.com/andranikarakelyan/js-utilities/compare/v0.11.0...HEAD
+[0.11.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.10.0...v0.11.0
 [0.10.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.9.0...v0.10.0
 [0.9.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.8.0...v0.9.0
 [0.8.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.7.0...v0.8.0
