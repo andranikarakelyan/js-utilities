@@ -34,6 +34,7 @@ Utility functions for all JavaScript/TypeScript environments.
   - [Promise Utilities](#promise-utilities)
     - [wait](#wait)
     - [retry](#retry)
+    - [safeAsync](#safeasync)
 - [Contributing](#contributing)
 - [Links](#links)
 - [License](#license)
@@ -442,6 +443,45 @@ const result = await retry(
     onRetry: (err, attempt) => console.log(`Retry attempt ${attempt}`) // Track retries
   }
 );
+```
+
+#### safeAsync
+Wraps an async function to handle errors gracefully without throwing exceptions. Returns a standardized result object instead of throwing errors, making error handling explicit and preventing unhandled promise rejections.
+```ts
+import { safeAsync } from '@andranik-arakelyan/js-utilities';
+
+// Basic usage with API call
+const result = await safeAsync(() => fetchUserData(userId));
+if (result.success) {
+  console.log('User data:', result.data);
+} else {
+  console.error('Failed to fetch user:', result.error.message);
+}
+
+// With file operations that might fail
+const fileResult = await safeAsync(() => fs.readFile('config.json', 'utf8'));
+if (fileResult.success) {
+  const config = JSON.parse(fileResult.data);
+  // Process config...
+} else {
+  console.error('File read failed:', fileResult.error);
+  // Handle error gracefully...
+}
+
+// No try/catch blocks needed - errors are values
+const apiResults = await Promise.all([
+  safeAsync(() => fetchUsers()),
+  safeAsync(() => fetchPosts()),
+  safeAsync(() => fetchComments())
+]);
+
+apiResults.forEach((result, index) => {
+  if (result.success) {
+    console.log(`API ${index} succeeded:`, result.data);
+  } else {
+    console.log(`API ${index} failed:`, result.error.message);
+  }
+});
 ```
 
 ## Contributing
