@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [0.12.0] - 2025-07-01
+
+### Added
+
+- New array utility function:
+  - `flatten` function to flatten nested arrays to a specified depth
+  - Supports configurable depth parameter (default: 1 level)
+  - Handles infinite depth flattening with `Infinity` parameter
+  - Provides input validation with descriptive error messages
+  - Maintains immutability by returning new arrays
+  - Comprehensive test suite covering various depth scenarios and edge cases
+
 ## [0.11.0] - 2025-06-24
 
 ### Added
@@ -159,7 +171,8 @@ and this project adheres to [Semantic Versioning].
 [semantic versioning]: https://semver.org/spec/v2.0.0.html
 
 <!-- Versions -->
-[unreleased]: https://github.com/andranikarakelyan/js-utilities/compare/v0.11.0...HEAD
+[unreleased]: https://github.com/andranikarakelyan/js-utilities/compare/v0.12.0...HEAD
+[0.12.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.11.0...v0.12.0
 [0.11.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.10.0...v0.11.0
 [0.10.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.9.0...v0.10.0
 [0.9.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.8.0...v0.9.0
