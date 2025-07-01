@@ -20,6 +20,7 @@ Utility functions for all JavaScript/TypeScript environments.
     - [unique](#unique)
     - [groupBy](#groupby)
     - [chunk](#chunk)
+    - [flatten](#flatten)
   - [Object Utilities](#object-utilities)
     - [deepClone](#deepclone)
   - [Random Utilities](#random-utilities)
@@ -221,6 +222,45 @@ console.log(userChunks);
 // Edge cases
 console.log(chunk([], 2)); // []
 console.log(chunk([1, 2, 3], 5)); // [[1, 2, 3]]
+```
+
+#### flatten
+Flattens an array to a specified depth, converting nested arrays into a single-level array.
+```ts
+import { flatten } from '@andranik-arakelyan/js-utilities';
+
+// Flatten one level deep (default)
+const nested = [1, [2, 3], [4, [5, 6]]];
+const result = flatten(nested);
+console.log(result); // [1, 2, 3, 4, [5, 6]]
+
+// Flatten completely (infinite depth)
+const deepNested = [1, [2, [3, [4, 5]]]];
+const completelyFlat = flatten(deepNested, Infinity);
+console.log(completelyFlat); // [1, 2, 3, 4, 5]
+
+// Flatten to specific depth
+const mixed = [1, [2, [3, [4, 5]]]];
+const flattenTwo = flatten(mixed, 2);
+console.log(flattenTwo); // [1, 2, 3, [4, 5]]
+
+// With objects and mixed types
+const data = [
+  { id: 1 },
+  [{ id: 2 }, { id: 3 }],
+  [{ id: 4 }, [{ id: 5 }]]
+];
+const flatObjects = flatten(data);
+console.log(flatObjects); 
+// [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, [{ id: 5 }]]
+
+// Processing API response data
+const apiData = [
+  { users: [{id: 1}, {id: 2}] },
+  { users: [{id: 3}] }
+];
+const allUsers = flatten(apiData.map(d => d.users));
+console.log(allUsers); // [{id: 1}, {id: 2}, {id: 3}]
 ```
 
 ### Object Utilities
