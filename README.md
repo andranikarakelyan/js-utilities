@@ -13,6 +13,7 @@ Utility functions for all JavaScript/TypeScript environments.
   - [Data Structures](#data-structures)
     - [Stack](#stackt)
     - [Queue](#queuet)
+    - [CircularBuffer](#circularbuffert)
   - [Array Utilities](#array-utilities)
     - [arraySubtract](#arraysubtract)
     - [arraySplit](#arraysplit)
@@ -96,6 +97,59 @@ console.log(queue.dequeue()); // "first" (removes and returns the front element)
 console.log(queue.size()); // 2 (returns the current number of elements)
 console.log(queue.isEmpty()); // false
 ```
+
+#### CircularBuffer<T>
+A fixed-size circular buffer (ring buffer) that overwrites the oldest elements when the buffer is full and new elements are added. Perfect for implementing sliding windows, recent activity logs, and rolling metrics.
+
+```ts
+import { CircularBuffer } from '@andranik-arakelyan/js-utilities';
+
+// Create a circular buffer with capacity of 3
+const buffer = new CircularBuffer<number>(3);
+
+// Add elements normally at first
+buffer.push(1); // [1]
+buffer.push(2); // [1, 2]  
+buffer.push(3); // [1, 2, 3] - buffer is now full
+
+// When full, new elements overwrite oldest
+buffer.push(4); // [2, 3, 4] - '1' was overwritten
+buffer.push(5); // [3, 4, 5] - '2' was overwritten
+
+console.log(buffer.toArray()); // [3, 4, 5]
+console.log(buffer.size()); // 3
+console.log(buffer.capacity()); // 3
+console.log(buffer.isFull()); // true
+
+// Access elements
+console.log(buffer.get(0)); // 3 (oldest element)
+console.log(buffer.peek()); // 5 (newest element)
+console.log(buffer.peekOldest()); // 3 (oldest element)
+
+// Remove oldest element
+const oldest = buffer.shift(); // 3
+console.log(buffer.toArray()); // [4, 5]
+
+// Clear all elements
+buffer.clear();
+console.log(buffer.isEmpty()); // true
+
+// Works with any data type
+const logBuffer = new CircularBuffer<{timestamp: Date, message: string}>(100);
+logBuffer.push({timestamp: new Date(), message: "User logged in"});
+
+// Iterable with for...of
+for (const item of buffer) {
+  console.log(item);
+}
+```
+
+**Use Cases:**
+- **Recent Activity Logs** - Keep track of last N user actions
+- **Rolling Metrics** - Store last N measurements for analysis  
+- **Sliding Window Data** - Maintain a moving window of data points
+- **Undo/Redo Systems** - Store last N states for undo functionality
+- **Rate Limiting** - Track recent requests for rate limiting
 
 ### Array Utilities
 
