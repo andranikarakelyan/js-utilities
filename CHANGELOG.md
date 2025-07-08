@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [0.13.0] - 2025-07-08
+
+### Added
+
+- New data structure:
+  - `CircularBuffer<T>` class - Fixed-size circular buffer (ring buffer) implementation
+  - Automatically overwrites oldest elements when buffer is full and new elements are added
+  - Generic type support for any data type (numbers, strings, objects, etc.)
+  - Complete API with `push()`, `shift()`, `get()`, `peek()`, `peekOldest()` methods
+  - Utility methods: `size()`, `capacity()`, `isFull()`, `isEmpty()`, `clear()`, `toArray()`
+  - Iterator support for `for...of` loops and `Array.from()`
+  - Handles buffer wrapping and maintains element order from oldest to newest
+  - Comprehensive test suite with 29 test cases covering all functionality and edge cases
+  - Perfect for implementing sliding windows, recent activity logs, rolling metrics, and undo systems
+  - Updated README with detailed documentation and practical usage examples
+
 ## [0.12.0] - 2025-07-01
 
 ### Added
@@ -171,7 +187,8 @@ and this project adheres to [Semantic Versioning].
 [semantic versioning]: https://semver.org/spec/v2.0.0.html
 
 <!-- Versions -->
-[unreleased]: https://github.com/andranikarakelyan/js-utilities/compare/v0.12.0...HEAD
+[unreleased]: https://github.com/andranikarakelyan/js-utilities/compare/v0.13.0...HEAD
+[0.13.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.12.0...v0.13.0
 [0.12.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.11.0...v0.12.0
 [0.11.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.10.0...v0.11.0
 [0.10.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.9.0...v0.10.0
