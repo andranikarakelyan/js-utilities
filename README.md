@@ -22,6 +22,8 @@ Utility functions for all JavaScript/TypeScript environments.
     - [groupBy](#groupby)
     - [chunk](#chunk)
     - [flatten](#flatten)
+    - [intersection](#intersection)
+    - [difference](#difference)
   - [Object Utilities](#object-utilities)
     - [deepClone](#deepclone)
   - [Random Utilities](#random-utilities)
@@ -315,6 +317,89 @@ const apiData = [
 ];
 const allUsers = flatten(apiData.map(d => d.users));
 console.log(allUsers); // [{id: 1}, {id: 2}, {id: 3}]
+```
+
+#### intersection
+Returns a new array containing elements that are present in both input arrays. Uses Set for efficient lookup, maintaining order from the first array.
+```ts
+import { intersection } from '@andranik-arakelyan/js-utilities';
+
+// Basic usage with numbers
+const arr1 = [1, 2, 3, 4];
+const arr2 = [3, 4, 5, 6];
+const result = intersection(arr1, arr2);
+console.log(result); // [3, 4]
+
+// With strings
+const colors1 = ['red', 'blue', 'green'];
+const colors2 = ['blue', 'yellow', 'green'];
+const common = intersection(colors1, colors2);
+console.log(common); // ['blue', 'green']
+
+// Maintains order from the first array
+const ordered1 = [4, 1, 3, 2];
+const ordered2 = [2, 3, 4, 1];
+const orderedResult = intersection(ordered1, ordered2);
+console.log(orderedResult); // [4, 1, 3, 2]
+
+// Handles duplicates correctly
+const duplicates1 = [1, 2, 2, 3, 3];
+const duplicates2 = [2, 3, 4];
+const duplicatesResult = intersection(duplicates1, duplicates2);
+console.log(duplicatesResult); // [2, 2, 3, 3]
+
+// With objects (by reference)
+const obj1 = { id: 1 };
+const obj2 = { id: 2 };
+const objects1 = [obj1, obj2];
+const objects2 = [obj1, { id: 3 }];
+const commonObjects = intersection(objects1, objects2);
+console.log(commonObjects); // [{ id: 1 }]
+```
+
+#### difference
+Returns a new array containing elements that are in the first array but not in the second array. Uses Set for efficient lookup, maintaining order from the first array.
+```ts
+import { difference } from '@andranik-arakelyan/js-utilities';
+
+// Basic usage with numbers
+const arr1 = [1, 2, 3, 4, 5];
+const arr2 = [3, 4];
+const result = difference(arr1, arr2);
+console.log(result); // [1, 2, 5]
+
+// With strings
+const colors1 = ['red', 'blue', 'green', 'yellow'];
+const colors2 = ['blue', 'green'];
+const remaining = difference(colors1, colors2);
+console.log(remaining); // ['red', 'yellow']
+
+// Maintains order from the first array
+const ordered1 = [5, 1, 3, 2, 4];
+const ordered2 = [2, 4];
+const orderedResult = difference(ordered1, ordered2);
+console.log(orderedResult); // [5, 1, 3]
+
+// Handles duplicates correctly
+const duplicates1 = [1, 2, 2, 3, 3, 4];
+const duplicates2 = [2, 4];
+const duplicatesResult = difference(duplicates1, duplicates2);
+console.log(duplicatesResult); // [1, 3, 3]
+
+// With objects (by reference)
+const obj1 = { id: 1 };
+const obj2 = { id: 2 };
+const obj3 = { id: 3 };
+const objects1 = [obj1, obj2, obj3];
+const objects2 = [obj2];
+const filtered = difference(objects1, objects2);
+console.log(filtered); // [{ id: 1 }, { id: 3 }]
+
+// Returns empty array when all elements are excluded
+const all = [1, 2, 3];
+const excludeAll = [1, 2, 3, 4, 5];
+const empty = difference(all, excludeAll);
+console.log(empty); // []
 ```
 
 ### Object Utilities
