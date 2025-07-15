@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [0.14.0] - 2025-07-15
+
+### Added
+
+- New array utility functions:
+  - `intersection` function to find common elements between two arrays
+  - `difference` function to find elements in first array but not in second
+  - Both functions use Set for efficient lookup and maintain order from first array
+  - Support for generic types and handle duplicates correctly
+  - Comprehensive test suites with edge cases and type safety
+  - Updated README with detailed documentation and usage examples
+
 ## [0.13.0] - 2025-07-08
 
 ### Added
@@ -187,7 +199,8 @@ and this project adheres to [Semantic Versioning].
 [semantic versioning]: https://semver.org/spec/v2.0.0.html
 
 <!-- Versions -->
-[unreleased]: https://github.com/andranikarakelyan/js-utilities/compare/v0.13.0...HEAD
+[unreleased]: https://github.com/andranikarakelyan/js-utilities/compare/v0.14.0...HEAD
+[0.14.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.13.0...v0.14.0
 [0.13.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.12.0...v0.13.0
 [0.12.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.11.0...v0.12.0
 [0.11.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.10.0...v0.11.0
