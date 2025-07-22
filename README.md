@@ -24,6 +24,9 @@ Utility functions for all JavaScript/TypeScript environments.
     - [flatten](#flatten)
     - [intersection](#intersection)
     - [difference](#difference)
+  - [Generator Utilities](#generator-utilities)
+    - [range](#range)
+    - [rangeIterable](#rangeiterable)
   - [Object Utilities](#object-utilities)
     - [deepClone](#deepclone)
   - [Random Utilities](#random-utilities)
@@ -400,6 +403,79 @@ const all = [1, 2, 3];
 const excludeAll = [1, 2, 3, 4, 5];
 const empty = difference(all, excludeAll);
 console.log(empty); // []
+```
+
+### Generator Utilities
+
+#### range
+Generates a sequence of numbers from start to stop (exclusive) with an optional step. This is a JavaScript implementation of Python's range() function using generators. Returns an iterator that yields numbers on demand without creating an array in memory, making it memory-efficient for large ranges.
+
+```ts
+import { range } from '@andranik-arakelyan/js-utilities';
+
+// Basic usage - range(stop)
+const result1 = [...range(5)];
+console.log(result1); // [0, 1, 2, 3, 4]
+
+// With start and stop - range(start, stop)
+const result2 = [...range(2, 8)];
+console.log(result2); // [2, 3, 4, 5, 6, 7]
+
+// With step - range(start, stop, step)
+const result3 = [...range(0, 10, 2)];
+console.log(result3); // [0, 2, 4, 6, 8]
+
+// Negative ranges
+const result4 = [...range(10, 0, -2)];
+console.log(result4); // [10, 8, 6, 4, 2]
+
+// Memory efficient for large ranges - use with for...of loop
+for (const i of range(1000000)) {
+  if (i > 5) break;
+  console.log(i); // 0, 1, 2, 3, 4, 5
+}
+
+// Decimal steps are supported
+const decimal = [...range(0, 3, 0.5)];
+console.log(decimal); // [0, 0.5, 1, 1.5, 2, 2.5]
+
+// Empty ranges when step direction conflicts
+console.log([...range(5, 0)]); // [] (positive step with start > stop)
+console.log([...range(0, 5, -1)]); // [] (negative step with start < stop)
+```
+
+**Key Features:**
+- **Memory Efficient** - Uses generators to yield values on demand, no arrays created
+- **Python Compatible** - Exact same API and behavior as Python's range()
+- **Lazy Evaluation** - Values computed only when needed
+- **Decimal Support** - Works with fractional step values
+- **Large Range Support** - Can handle very large ranges without memory issues
+
+#### rangeIterable
+Creates a reusable range iterator that can be iterated over multiple times. Unlike the generator function, this returns an iterable object that doesn't get exhausted after one use.
+
+```ts
+import { rangeIterable } from '@andranik-arakelyan/js-utilities';
+
+// Create a reusable range
+const r = rangeIterable(0, 5);
+
+// Can be used multiple times
+const result1 = [...r]; // [0, 1, 2, 3, 4]
+const result2 = [...r]; // [0, 1, 2, 3, 4] - still works!
+
+// Works with multiple iterations
+let count1 = 0;
+for (const _ of r) count1++;
+
+let count2 = 0;
+for (const _ of r) count2++;
+
+console.log(count1, count2); // 5, 5 - both iterations work
+
+// Supports destructuring
+const [first, second, ...rest] = rangeIterable(0, 5);
+console.log(first, second, rest); // 0, 1, [2, 3, 4]
 ```
 
 ### Object Utilities
