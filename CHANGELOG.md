@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [0.15.0] - 2025-07-22
+
+### Added
+
+- New Generator Utilities module:
+  - `range()` function - JavaScript implementation of Python's range() using generators
+  - Memory-efficient iterator that yields numbers on demand without creating arrays
+  - Supports all Python range signatures: `range(stop)`, `range(start, stop)`, `range(start, stop, step)`
+  - Handles negative ranges, decimal steps, and empty ranges when step direction conflicts
+  - `rangeIterable()` function for creating reusable iterators that can be iterated multiple times
+  - Comprehensive test suite with 31 test cases covering all functionality and edge cases
+  - Updated README with detailed Generator Utilities section and usage examples
+
 ## [0.14.0] - 2025-07-15
 
 ### Added
@@ -199,7 +212,8 @@ and this project adheres to [Semantic Versioning].
 [semantic versioning]: https://semver.org/spec/v2.0.0.html
 
 <!-- Versions -->
-[unreleased]: https://github.com/andranikarakelyan/js-utilities/compare/v0.14.0...HEAD
+[unreleased]: https://github.com/andranikarakelyan/js-utilities/compare/v0.15.0...HEAD
+[0.15.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.14.0...v0.15.0
 [0.14.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.13.0...v0.14.0
 [0.13.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.12.0...v0.13.0
 [0.12.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.11.0...v0.12.0
