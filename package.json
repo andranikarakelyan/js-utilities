@@ -9,7 +9,7 @@
     "access": "public"
   },
   "scripts": {
-    "prepublishOnly": "npm test && npm run build && npm run minify && npm run check-git-clean",
+    "prepublishOnly": "npm test && npm run build && npm run minify && npm pack --dry-run && npm run check-git-clean",
     "build": "rimraf dist && tsc",
     "test": "jest",
     "check-git-clean": "git diff --quiet || (echo '❌ Commit your changes first!' && exit 1)",
