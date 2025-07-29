@@ -2,6 +2,51 @@
 
 This document provides detailed documentation for all features available in @andranik-arakelyan/js-utilities.
 
+## Table of Contents
+
+### [Data Structures](#data-structures)
+- [Stack\<T\>](#stackt)
+- [Queue\<T\>](#queuet)
+- [CircularBuffer\<T\>](#circularbuffert)
+
+### [Array Utilities](#array-utilities)
+- [arraySubtract](#arraysubtract)
+- [arraySplit](#arraysplit)
+- [shuffle](#shuffle)
+- [unique](#unique)
+- [groupBy](#groupby)
+- [chunk](#chunk)
+- [flatten](#flatten)
+- [intersection](#intersection)
+- [difference](#difference)
+
+### [Generator Utilities](#generator-utilities)
+- [range](#range)
+- [rangeIterable](#rangeiterable)
+
+### [Object Utilities](#object-utilities)
+- [deepClone](#deepclone)
+- [jsonCompare](#jsoncompare)
+
+### [Random Utilities](#random-utilities)
+- [randomInt](#randomint)
+- [randomBoolean](#randomboolean)
+
+### [Runtime Utilities](#runtime-utilities)
+- [currentCodeInfo](#currentcodeinfo)
+
+### [Function Utilities](#function-utilities)
+- [once](#once)
+- [debounce](#debounce)
+- [throttle](#throttle)
+
+### [Promise Utilities](#promise-utilities)
+- [wait](#wait)
+- [retry](#retry)
+- [safeAsync](#safeasync)
+
+---
+
 ## Data Structures
 
 ### Stack<T>
@@ -455,6 +500,110 @@ console.log(cloneData.regex instanceof RegExp); // true
 console.log(cloneData.set instanceof Set); // true
 console.log(cloneData.map instanceof Map); // true
 ```
+
+### jsonCompare
+Compares a base JSON object with multiple other JSON objects and returns structured differences. This function performs deep comparison and identifies missing keys, extra keys, and type mismatches between objects.
+
+```ts
+import { jsonCompare } from '@andranik-arakelyan/js-utilities';
+
+// Basic comparison
+const base = {
+  name: "John",
+  age: 30,
+  address: {
+    city: "NYC",
+    zip: "10001"
+  }
+};
+
+const obj1 = {
+  name: "John",
+  address: { city: "NYC" }
+}; // missing 'age' and 'address.zip'
+
+const obj2 = {
+  name: "John",
+  age: "30", // type mismatch: string instead of number
+  address: { city: "NYC", zip: "10001" },
+  email: "john@example.com" // extra key
+};
+
+const differences = jsonCompare(base, [obj1, obj2]);
+console.log(differences);
+// [
+//   { objectIndex: 0, diffType: 'missing_key', keyPath: 'age', baseValueType: 'number' },
+//   { objectIndex: 0, diffType: 'missing_key', keyPath: 'address.zip', baseValueType: 'string' },
+//   { objectIndex: 1, diffType: 'type_mismatch', keyPath: 'age', baseValueType: 'number', comparedValueType: 'string' },
+//   { objectIndex: 1, diffType: 'extra_key', keyPath: 'email', comparedValueType: 'string' }
+// ]
+
+// Programmatically handle differences
+differences.forEach(diff => {
+  switch (diff.diffType) {
+    case 'missing_key':
+      console.log(`Object ${diff.objectIndex} is missing key: ${diff.keyPath}`);
+      break;
+    case 'extra_key':
+      console.log(`Object ${diff.objectIndex} has extra key: ${diff.keyPath}`);
+      break;
+    case 'type_mismatch':
+      console.log(`Object ${diff.objectIndex} has type mismatch at ${diff.keyPath}: expected ${diff.baseValueType}, got ${diff.comparedValueType}`);
+      break;
+  }
+});
+
+// Complex nested structures
+const config = {
+  app: {
+    name: "MyApp",
+    features: {
+      auth: {
+        enabled: true,
+        providers: ["google", "facebook"]
+      },
+      notifications: {
+        email: true,
+        push: false
+      }
+    }
+  }
+};
+
+const incompleteConfig = {
+  app: {
+    name: "MyApp",
+    features: {
+      auth: {
+        enabled: true
+        // missing 'providers'
+      }
+      // missing 'notifications' entirely
+    }
+  }
+};
+
+const configDiffs = jsonCompare(config, [incompleteConfig]);
+// Identifies missing nested keys and structures
+```
+
+**Use Cases:**
+- **Configuration Validation** - Compare expected config structure with actual config
+- **API Response Validation** - Ensure API responses contain all required fields
+- **Data Migration** - Identify missing or changed fields during data transformations
+- **Translation File Auditing** - Find missing translation keys across different language files
+- **Schema Validation** - Verify data objects conform to expected schemas
+- **Testing** - Compare expected vs actual object structures in tests
+
+**Difference Types:**
+- `missing_key` - Key exists in base but not in compared object
+- `extra_key` - Key exists in compared object but not in base  
+- `type_mismatch` - Key exists in both but values have different types
+
+**Type Detection:**
+- Distinguishes between `array`, `object`, `string`, `number`, `boolean`, `null`, and `undefined`
+- Uses dot notation for nested key paths (`user.profile.address.city`)
+- Handles deeply nested structures recursively
 
 ## Random Utilities
 
