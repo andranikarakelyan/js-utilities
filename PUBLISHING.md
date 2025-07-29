@@ -7,13 +7,14 @@ This document outlines the steps required to publish a new version of the packag
 ### 1. Implement features and commit them
 
 - Develop new features, bug fixes, or improvements
+- Add new features to the FEATURES.md file with documentation and examples
 - Write tests for new functionality
 - Ensure all tests pass by running `npm test`
 - Commit your changes to the repository
 
 ### 2. Bump version (in a separate commit)
 
-- Update the version in `package.json` according to [Semantic Versioning](https://semver.org/):
+- Update the version in `package.json` manually according to [Semantic Versioning](https://semver.org/):
   - MAJOR version for incompatible API changes
   - MINOR version for backward-compatible functionality additions
   - PATCH version for backward-compatible bug fixes
@@ -35,13 +36,7 @@ This document outlines the steps required to publish a new version of the packag
     ### Documentation
     - Improved JSDoc comments for random-functions.ts
     ```
-- You can use npm commands to update the version:
-  ```
-  npm version patch # for bug fixes
-  npm version minor # for new features
-  npm version major # for breaking changes
-  ```
-- Alternatively, update the version manually in `package.json` and commit it
+- Commit the version and changelog changes together
 
 - Run the pre-publish script to verify everything is ready:
   ```
@@ -65,11 +60,15 @@ This document outlines the steps required to publish a new version of the packag
 
 ### 4. Publish to npm
 
-- Ensure you're logged in to npm:
+- Publish the package:
+  ```
+  npm publish
+  ```
+- If you get authentication errors, login to npm:
   ```
   npm login
   ```
-- Publish the package:
+  Then retry publishing:
   ```
   npm publish
   ```
