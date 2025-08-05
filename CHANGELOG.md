@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [0.17.0] - 2025-08-05
+
+### Added
+
+- New data structure:
+  - `LRUCache<K, V>` class - Least Recently Used cache with automatic eviction
+  - O(1) get/put operations with generic type support
+  - Complete API: get, put, has, delete, clear, size, isEmpty, isFull
+  - Iterator support for keys(), values(), entries(), forEach(), and for...of loops
+  - Perfect for API caching, function memoization, and memory management
+  - Comprehensive test suite with 25 test cases
+  - Detailed documentation with real-world examples
+
 ## [0.16.0] - 2025-07-29
 
 ### Added
@@ -236,7 +249,8 @@ and this project adheres to [Semantic Versioning].
 [semantic versioning]: https://semver.org/spec/v2.0.0.html
 
 <!-- Versions -->
-[unreleased]: https://github.com/andranikarakelyan/js-utilities/compare/v0.16.0...HEAD
+[unreleased]: https://github.com/andranikarakelyan/js-utilities/compare/v0.17.0...HEAD
+[0.17.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.16.0...v0.17.0
 [0.16.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.15.0...v0.16.0
 [0.15.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.14.0...v0.15.0
 [0.14.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.13.0...v0.14.0
