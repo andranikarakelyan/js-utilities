@@ -8,6 +8,7 @@ This document provides detailed documentation for all features available in @and
 - [Stack\<T\>](#stackt)
 - [Queue\<T\>](#queuet)
 - [CircularBuffer\<T\>](#circularbuffert)
+- [LRUCache\<K, V\>](#lrucachek-v)
 
 ### [Array Utilities](#array-utilities)
 - [arraySubtract](#arraysubtract)
@@ -139,6 +140,148 @@ for (const item of buffer) {
 - **Sliding Window Data** - Maintain a moving window of data points
 - **Undo/Redo Systems** - Store last N states for undo functionality
 - **Rate Limiting** - Track recent requests for rate limiting
+
+### LRUCache<K, V>
+A Least Recently Used (LRU) cache that maintains a fixed capacity and automatically evicts the least recently accessed items when the cache reaches its limit. Perfect for implementing memory-efficient caches with intelligent eviction policies.
+
+```ts
+import { LRUCache } from '@andranik-arakelyan/js-utilities';
+
+// Create a cache with capacity of 3
+const cache = new LRUCache<string, number>(3);
+
+// Add items normally at first
+cache.put('a', 1); // cache: ['a': 1]
+cache.put('b', 2); // cache: ['a': 1, 'b': 2]
+cache.put('c', 3); // cache: ['a': 1, 'b': 2, 'c': 3] - now at capacity
+
+// Access an item (marks it as recently used)
+cache.get('a'); // Returns 1, order becomes: ['b': 2, 'c': 3, 'a': 1]
+
+// When capacity is exceeded, least recently used item is evicted
+cache.put('d', 4); // cache: ['c': 3, 'a': 1, 'd': 4] - 'b' was evicted
+
+console.log(cache.has('b')); // false - 'b' was evicted
+console.log(cache.get('a')); // 1 - 'a' still exists
+console.log(cache.size()); // 3
+console.log(cache.getCapacity()); // 3
+
+// Check cache state
+console.log(cache.isFull()); // true
+console.log(cache.isEmpty()); // false
+
+// Iterate over entries (from least to most recently used)
+for (const [key, value] of cache) {
+  console.log(`${key}: ${value}`); // 'c: 3', 'a: 1', 'd: 4'
+}
+
+// Get all entries as array
+const entries = cache.toArray(); // [['c', 3], ['a', 1], ['d', 4]]
+
+// Clear cache
+cache.clear();
+console.log(cache.isEmpty()); // true
+
+// API Response Caching Example
+interface ApiResponse {
+  data: any;
+  timestamp: number;
+}
+
+const apiCache = new LRUCache<string, ApiResponse>(100);
+
+// Cache API responses
+apiCache.put('/users/123', { 
+  data: { id: 123, name: 'Alice' }, 
+  timestamp: Date.now() 
+});
+
+// Retrieve cached response
+const cachedUser = apiCache.get('/users/123');
+if (cachedUser) {
+  console.log('Cache hit:', cachedUser.data);
+} else {
+  console.log('Cache miss - fetch from API');
+}
+
+// Function Memoization Example
+const fibCache = new LRUCache<number, number>(50);
+
+function fibonacci(n: number): number {
+  if (fibCache.has(n)) {
+    return fibCache.get(n)!;
+  }
+  
+  const result = n <= 1 ? n : fibonacci(n - 1) + fibonacci(n - 2);
+  fibCache.put(n, result);
+  return result;
+}
+
+console.log(fibonacci(40)); // Computed with memoization
+console.log(fibonacci(35)); // Retrieved from cache
+
+// Database Query Cache Example
+interface QueryResult {
+  rows: any[];
+  executionTime: number;
+}
+
+const queryCache = new LRUCache<string, QueryResult>(200);
+
+function executeQuery(sql: string): QueryResult {
+  if (queryCache.has(sql)) {
+    console.log('Query cache hit');
+    return queryCache.get(sql)!;
+  }
+  
+  // Simulate expensive database query
+  const result = {
+    rows: [/* query results */],
+    executionTime: 45
+  };
+  
+  queryCache.put(sql, result);
+  return result;
+}
+
+// Web Asset Cache Example
+const assetCache = new LRUCache<string, Blob>(50);
+
+async function loadAsset(url: string): Promise<Blob> {
+  if (assetCache.has(url)) {
+    return assetCache.get(url)!;
+  }
+  
+  const response = await fetch(url);
+  const blob = await response.blob();
+  assetCache.put(url, blob);
+  return blob;
+}
+```
+
+**Key Features:**
+- **Automatic Eviction** - Removes least recently used items when capacity is reached
+- **Access-Based Ordering** - Tracks both `get()` and `put()` operations as "usage"
+- **Memory Efficient** - Fixed memory footprint, never grows beyond capacity
+- **Type Safe** - Full TypeScript generic support for keys and values
+- **Iterable** - Supports for...of loops and iteration methods
+- **Performance** - O(1) average time complexity for get/put operations
+
+**Use Cases:**
+- **API Response Caching** - Cache expensive HTTP requests with automatic cleanup
+- **Function Memoization** - Cache computed function results with memory limits
+- **Database Query Caching** - Store frequently accessed query results
+- **Image/Asset Caching** - Browser-like cache for loaded resources
+- **Session Management** - Keep recent user sessions in memory
+- **Configuration Caching** - Cache parsed configuration files
+- **Computed Property Caching** - Cache expensive calculations in applications
+- **Translation Caching** - Store translated strings with intelligent eviction
+
+**LRU vs Other Caching Strategies:**
+- **LRU** - Evicts least recently accessed items (best for general use)
+- **FIFO** - Evicts oldest items by insertion time (simpler but less intelligent)
+- **LFU** - Evicts least frequently used items (good for stable access patterns)
+- **TTL** - Evicts items after time expiration (good for time-sensitive data)
 
 ## Array Utilities
 
