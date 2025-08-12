@@ -28,6 +28,8 @@ This document provides detailed documentation for all features available in @and
 ### [Object Utilities](#object-utilities)
 - [deepClone](#deepclone)
 - [jsonCompare](#jsoncompare)
+- [flattenObject](#flattenobject)
+- [unflattenObject](#unflattenobject)
 
 ### [Random Utilities](#random-utilities)
 - [randomInt](#randomint)
@@ -747,6 +749,248 @@ const configDiffs = jsonCompare(config, [incompleteConfig]);
 - Distinguishes between `array`, `object`, `string`, `number`, `boolean`, `null`, and `undefined`
 - Uses dot notation for nested key paths (`user.profile.address.city`)
 - Handles deeply nested structures recursively
+
+### flattenObject
+Converts a nested object into a flat object with dot notation keys. This is useful for storing nested data in systems that don't support nested structures (like some databases), or for easier manipulation and comparison of deeply nested objects.
+
+```ts
+import { flattenObject } from '@andranik-arakelyan/js-utilities';
+
+// Basic usage with nested objects
+const nested = {
+  user: {
+    profile: {
+      name: 'John',
+      age: 30
+    },
+    settings: {
+      theme: 'dark',
+      notifications: {
+        email: true,
+        push: false
+      }
+    }
+  },
+  app: {
+    version: '1.0.0'
+  }
+};
+
+const flattened = flattenObject(nested);
+console.log(flattened);
+// {
+//   'user.profile.name': 'John',
+//   'user.profile.age': 30,
+//   'user.settings.theme': 'dark',
+//   'user.settings.notifications.email': true,
+//   'user.settings.notifications.push': false,
+//   'app.version': '1.0.0'
+// }
+
+// Handles arrays as primitive values
+const withArrays = {
+  items: [1, 2, 3],
+  config: {
+    tags: ['frontend', 'backend'],
+    options: {
+      features: ['auth', 'api']
+    }
+  }
+};
+
+const flattenedArrays = flattenObject(withArrays);
+console.log(flattenedArrays);
+// {
+//   'items': [1, 2, 3],
+//   'config.tags': ['frontend', 'backend'],
+//   'config.options.features': ['auth', 'api']
+// }
+
+// Preserves special objects (Date, RegExp, etc.)
+const withSpecialTypes = {
+  created: new Date('2025-01-01'),
+  validation: {
+    email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+    timestamps: {
+      updated: new Date('2025-08-12')
+    }
+  }
+};
+
+const flattenedSpecial = flattenObject(withSpecialTypes);
+// Date and RegExp objects are preserved as-is in the flattened structure
+
+// Configuration file processing
+const config = {
+  database: {
+    connection: {
+      host: 'localhost',
+      port: 5432,
+      ssl: {
+        enabled: true,
+        cert: '/path/to/cert'
+      }
+    },
+    pool: {
+      min: 2,
+      max: 10
+    }
+  },
+  cache: {
+    redis: {
+      url: 'redis://localhost:6379',
+      options: {
+        maxRetries: 3,
+        timeout: 5000
+      }
+    }
+  }
+};
+
+const flatConfig = flattenObject(config);
+// Perfect for environment variable mapping:
+// 'database.connection.host' -> DATABASE_CONNECTION_HOST
+// 'database.connection.port' -> DATABASE_CONNECTION_PORT
+// 'cache.redis.options.timeout' -> CACHE_REDIS_OPTIONS_TIMEOUT
+```
+
+### unflattenObject
+Converts a flat object with dot notation keys back into a nested object structure. This is the inverse operation of `flattenObject` and is useful for reconstructing nested data from flat storage formats.
+
+```ts
+import { unflattenObject } from '@andranik-arakelyan/js-utilities';
+
+// Basic usage - reverse of flattenObject
+const flattened = {
+  'user.profile.name': 'John',
+  'user.profile.age': 30,
+  'user.settings.theme': 'dark',
+  'user.settings.notifications.email': true,
+  'user.settings.notifications.push': false,
+  'app.version': '1.0.0'
+};
+
+const nested = unflattenObject(flattened);
+console.log(nested);
+// {
+//   user: {
+//     profile: {
+//       name: 'John',
+//       age: 30
+//     },
+//     settings: {
+//       theme: 'dark',
+//       notifications: {
+//         email: true,
+//         push: false
+//       }
+//     }
+//   },
+//   app: {
+//     version: '1.0.0'
+//   }
+// }
+
+// Perfect roundtrip with flattenObject
+const original = {
+  api: {
+    endpoints: {
+      users: '/api/users',
+      posts: '/api/posts'
+    },
+    auth: {
+      jwt: {
+        secret: 'secret-key',
+        expiry: 3600
+      }
+    }
+  }
+};
+
+const flattened2 = flattenObject(original);
+const reconstructed = unflattenObject(flattened2);
+console.log(JSON.stringify(original) === JSON.stringify(reconstructed)); // true
+
+// Environment variable reconstruction
+const envVars = {
+  'DATABASE_HOST': 'localhost',
+  'DATABASE_PORT': '5432',
+  'DATABASE_NAME': 'myapp',
+  'CACHE_REDIS_URL': 'redis://localhost:6379',
+  'CACHE_REDIS_TIMEOUT': '5000',
+  'API_JWT_SECRET': 'secret-key',
+  'API_JWT_EXPIRY': '3600'
+};
+
+// Convert environment variables to nested config
+const dotNotationConfig = {};
+Object.entries(envVars).forEach(([key, value]) => {
+  const dotKey = key.toLowerCase().replace(/_/g, '.');
+  dotNotationConfig[dotKey] = value;
+});
+
+const nestedConfig = unflattenObject(dotNotationConfig);
+console.log(nestedConfig);
+// {
+//   database: {
+//     host: 'localhost',
+//     port: '5432',
+//     name: 'myapp'
+//   },
+//   cache: {
+//     redis: {
+//       url: 'redis://localhost:6379',
+//       timeout: '5000'
+//     }
+//   },
+//   api: {
+//     jwt: {
+//       secret: 'secret-key',
+//       expiry: '3600'
+//     }
+//   }
+// }
+
+// Form data processing
+const formData = {
+  'personal.firstName': 'John',
+  'personal.lastName': 'Doe',
+  'personal.email': 'john@example.com',
+  'address.street': '123 Main St',
+  'address.city': 'New York',
+  'address.zip': '10001',
+  'preferences.newsletter': true,
+  'preferences.theme': 'dark'
+};
+
+const structuredData = unflattenObject(formData);
+// Perfect for sending to APIs that expect nested objects
+```
+
+**Common Use Cases:**
+
+**flattenObject:**
+- **Environment Variable Mapping** - Convert nested config to flat environment variables
+- **Database Storage** - Store nested data in key-value databases 
+- **Form Serialization** - Convert nested form data to flat query parameters
+- **Configuration Management** - Flatten config for easier processing
+- **CSV Export** - Convert nested JSON to flat structure for CSV generation
+- **Search Indexing** - Flatten documents for full-text search engines
+
+**unflattenObject:**
+- **Environment Variable Loading** - Reconstruct nested config from environment variables
+- **API Response Processing** - Convert flat API responses back to nested structures
+- **Form Data Reconstruction** - Rebuild nested objects from form submissions
+- **Configuration Loading** - Load flat configuration files into nested structures
+- **Database Deserialization** - Convert flat database records back to nested objects
+- **Message Queue Processing** - Reconstruct objects from flattened message payloads
+
+**Key Features:**
+- **Type Preservation** - Maintains all primitive types, arrays, dates, regexes, etc.
+- **Perfect Roundtrip** - `unflattenObject(flattenObject(obj))` returns the original object
+- **Null/Undefined Safe** - Properly handles null and undefined values
+- **Empty Object Handling** - Efficiently handles empty nested objects
+- **Performance Optimized** - Efficient algorithms for both flattening and unflattening operations
 
 ## Random Utilities
 
