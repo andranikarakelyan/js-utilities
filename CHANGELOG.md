@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [0.18.0] - 2025-08-12
+
+### Added
+
+- New object utility functions:
+  - `flattenObject` function to convert nested objects into flat objects with dot notation keys
+  - `unflattenObject` function to convert flat objects with dot notation keys back to nested structures
+  - Both functions handle arrays, dates, regexes, and other special objects as primitive values
+  - Perfect for environment variable mapping, configuration management, and form data processing
+  - Comprehensive test suites with 22 total test cases covering all functionality and edge cases
+  - Complete roundtrip compatibility between flatten and unflatten operations
+
 ## [0.17.0] - 2025-08-05
 
 ### Added
@@ -249,7 +261,8 @@ and this project adheres to [Semantic Versioning].
 [semantic versioning]: https://semver.org/spec/v2.0.0.html
 
 <!-- Versions -->
-[unreleased]: https://github.com/andranikarakelyan/js-utilities/compare/v0.17.0...HEAD
+[unreleased]: https://github.com/andranikarakelyan/js-utilities/compare/v0.18.0...HEAD
+[0.18.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.17.0...v0.18.0
 [0.17.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.16.0...v0.17.0
 [0.16.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.15.0...v0.16.0
 [0.15.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.14.0...v0.15.0
