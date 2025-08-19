@@ -30,15 +30,31 @@ describe('MultiSet', () => {
     expect(ms.size()).toBe(0);
   });
 
-  it('does not add or remove with zero or negative count', () => {
+
+  it('add: zero count does nothing, negative count decreases, removes if <= 0', () => {
     const ms = new MultiSet<number>();
     ms.add(1, 0);
-    ms.add(2, -2);
     expect(ms.size()).toBe(0);
-    ms.add(3, 2);
-    ms.remove(3, 0);
-    ms.remove(3, -1);
-    expect(ms.count(3)).toBe(4);
+    ms.add(2, 5);
+    ms.add(2, -2);
+    expect(ms.count(2)).toBe(3);
+    ms.add(2, -3);
+    expect(ms.has(2)).toBe(false);
+    ms.add(3, -1);
+    expect(ms.has(3)).toBe(false);
+  });
+
+  it('remove: zero count does nothing, negative count increases, removes if <= 0', () => {
+    const ms = new MultiSet<number>();
+    ms.add(1, 2);
+    ms.remove(1, 0);
+    expect(ms.count(1)).toBe(2);
+    ms.remove(1, -3);
+    expect(ms.count(1)).toBe(5);
+    ms.remove(1, 5);
+    expect(ms.has(1)).toBe(false);
+    ms.remove(2, 1); // removing non-existent
+    expect(ms.has(2)).toBe(false);
   });
 
   it('removing more than present deletes the item', () => {
