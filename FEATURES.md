@@ -5,10 +5,11 @@ This document provides detailed documentation for all features available in @and
 ## Table of Contents
 
 ### [Data Structures](#data-structures)
-- [Stack\<T\>](#stackt)
-- [Queue\<T\>](#queuet)
-- [CircularBuffer\<T\>](#circularbuffert)
-- [LRUCache\<K, V\>](#lrucachek-v)
+- [Stack<T>](#stackt)
+- [Queue<T>](#queuet)
+- [CircularBuffer<T>](#circularbuffert)
+- [LRUCache<K, V>](#lrucachek-v)
+- [MultiSet<T>](#multisett)
 
 ### [Array Utilities](#array-utilities)
 - [arraySubtract](#arraysubtract)
@@ -51,6 +52,23 @@ This document provides detailed documentation for all features available in @and
 ---
 
 ## Data Structures
+
+### MultiSet<T>
+A MultiSet (bag) allows duplicate elements and counts how many times each value appears.
+```ts
+import { MultiSet } from '@andranik-arakelyan/js-utilities';
+
+const ms = new MultiSet<number>();
+ms.add(1);
+ms.add(2, 3);
+console.log(ms.count(1)); // 1
+console.log(ms.count(2)); // 3
+ms.remove(2);
+console.log(ms.count(2)); // 2
+console.log(ms.size()); // 3 (total items)
+console.log(ms.uniqueSize()); // 2 (unique items)
+console.log(ms.toArray()); // [1, 2, 2]
+```
 
 ### Stack<T>
 A generic type-safe implementation of a Stack data structure with LIFO (Last-In-First-Out) operations.
