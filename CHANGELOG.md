@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog],
 and this project adheres to [Semantic Versioning].
 
+
+## [Unreleased]
+
+## [0.19.0] - 2025-08-19
+
+### Added
+- New data structure: `MultiSet<T>` (bag) for counting duplicate items, supports positive/negative add/remove, and always keeps positive counts.
+- Full JSDoc documentation and comprehensive tests for all behaviors.
+
+### Changed
+- Refactored and improved MultiSet tests to match new logic and edge cases.
+
 ## [Unreleased]
 
 ## [0.18.0] - 2025-08-12
@@ -261,7 +273,8 @@ and this project adheres to [Semantic Versioning].
 [semantic versioning]: https://semver.org/spec/v2.0.0.html
 
 <!-- Versions -->
-[unreleased]: https://github.com/andranikarakelyan/js-utilities/compare/v0.18.0...HEAD
+[unreleased]: https://github.com/andranikarakelyan/js-utilities/compare/v0.19.0...HEAD
+[0.19.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.18.0...v0.19.0
 [0.18.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.17.0...v0.18.0
 [0.17.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.16.0...v0.17.0
 [0.16.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.15.0...v0.16.0
