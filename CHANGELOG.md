@@ -8,6 +8,18 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [0.20.0] - 2025-08-26
+
+### Added
+- New promise utility class:
+  - `PromisePool` class for managing async function execution with concurrency control
+  - Configurable concurrency limits to prevent resource exhaustion
+  - Automatic queueing when pool is at capacity
+  - Type-safe generic support for different async function signatures
+  - Monitoring properties: runningCount, queuedCount, isAtCapacity, maxConcurrency
+  - Perfect for API rate limiting, file processing, and batch operations
+  - Comprehensive test suite with 10 test cases covering all functionality
+
 ## [0.19.0] - 2025-08-19
 
 ### Added
@@ -273,7 +285,8 @@ and this project adheres to [Semantic Versioning].
 [semantic versioning]: https://semver.org/spec/v2.0.0.html
 
 <!-- Versions -->
-[unreleased]: https://github.com/andranikarakelyan/js-utilities/compare/v0.19.0...HEAD
+[unreleased]: https://github.com/andranikarakelyan/js-utilities/compare/v0.20.0...HEAD
+[0.20.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.19.0...v0.20.0
 [0.19.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.18.0...v0.19.0
 [0.18.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.17.0...v0.18.0
 [0.17.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.16.0...v0.17.0
