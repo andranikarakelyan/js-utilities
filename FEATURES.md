@@ -48,6 +48,7 @@ This document provides detailed documentation for all features available in @and
 - [wait](#wait)
 - [retry](#retry)
 - [safeAsync](#safeasync)
+- [PromisePool](#promisepool)
 
 ---
 
@@ -1230,4 +1231,49 @@ apiResults.forEach((result, index) => {
     console.log(`API ${index} failed:`, result.error.message);
   }
 });
+```
+
+### PromisePool
+A concurrency control utility that manages the execution of async functions with a maximum concurrency limit. Functions are queued and executed in batches, ensuring no more than the specified number run simultaneously.
+
+```ts
+import { PromisePool } from '@andranik-arakelyan/js-utilities';
+
+// Create a pool with max 3 concurrent operations
+const pool = new PromisePool(3);
+
+// Execute async functions through the pool
+const results = await Promise.all([
+  pool.execute(() => fetchUser(1)),
+  pool.execute(() => fetchUser(2)),
+  pool.execute(() => fetchUser(3)),
+  pool.execute(() => fetchUser(4)),  // Will be queued
+  pool.execute(() => fetchUser(5))   // Will be queued
+]);
+
+// API rate limiting example
+const apiPool = new PromisePool(5); // Max 5 concurrent API calls
+
+const userIds = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+const users = await Promise.all(
+  userIds.map(id => 
+    apiPool.execute(() => fetch(`/api/users/${id}`).then(r => r.json()))
+  )
+);
+
+// File processing with limited resources
+const filePool = new PromisePool(2);
+
+const filePaths = ['file1.txt', 'file2.txt', 'file3.txt'];
+const fileContents = await Promise.all(
+  filePaths.map(path =>
+    filePool.execute(() => fs.readFile(path, 'utf8'))
+  )
+);
+
+// Monitor pool status
+console.log(pool.runningCount);   // Current running tasks
+console.log(pool.queuedCount);    // Current queued tasks  
+console.log(pool.isAtCapacity);   // Whether pool is at max capacity
+console.log(pool.maxConcurrency); // Pool's concurrency limit
 ```
