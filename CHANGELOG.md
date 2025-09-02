@@ -8,6 +8,16 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [0.21.0] - 2025-09-02
+
+### Added
+- New object utility function:
+  - `deepMerge` function for deep merging objects with optional path-based targeting
+  - Supports dot notation paths for merging at specific nested locations (e.g., 'user.profiles.0.transactions')
+  - Handles arrays, objects, and primitive types with intelligent merging strategies
+  - Perfect for configuration management, state updates, and nested data manipulation
+  - Comprehensive test suite with 25 test cases covering all functionality and edge cases
+
 ## [0.20.0] - 2025-08-26
 
 ### Added
@@ -285,7 +295,8 @@ and this project adheres to [Semantic Versioning].
 [semantic versioning]: https://semver.org/spec/v2.0.0.html
 
 <!-- Versions -->
-[unreleased]: https://github.com/andranikarakelyan/js-utilities/compare/v0.20.0...HEAD
+[unreleased]: https://github.com/andranikarakelyan/js-utilities/compare/v0.21.0...HEAD
+[0.21.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.20.0...v0.21.0
 [0.20.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.19.0...v0.20.0
 [0.19.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.18.0...v0.19.0
 [0.18.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.17.0...v0.18.0
