@@ -28,6 +28,7 @@ This document provides detailed documentation for all features available in @and
 
 ### [Object Utilities](#object-utilities)
 - [deepClone](#deepclone)
+- [deepMerge](#deepmerge)
 - [jsonCompare](#jsoncompare)
 - [flattenObject](#flattenobject)
 - [unflattenObject](#unflattenobject)
@@ -663,6 +664,127 @@ console.log(cloneData.date instanceof Date); // true
 console.log(cloneData.regex instanceof RegExp); // true
 console.log(cloneData.set instanceof Set); // true
 console.log(cloneData.map instanceof Map); // true
+```
+
+### deepMerge
+Deep merges one object into another object, optionally at a specific path. This function modifies the target object and provides powerful path-based merging capabilities for nested data structures.
+
+```ts
+import { deepMerge } from '@andranik-arakelyan/js-utilities';
+
+// Basic deep merge
+const target = { a: 1, b: { c: 2 } };
+const source = { b: { d: 3 }, e: 4 };
+const result = deepMerge(target, source);
+console.log(result); // { a: 1, b: { c: 2, d: 3 }, e: 4 }
+console.log(result === target); // true - modifies target object
+
+// Nested object merging
+const config = {
+  database: { host: 'localhost', port: 5432 },
+  cache: { enabled: true }
+};
+const updates = {
+  database: { ssl: true, timeout: 5000 },
+  logging: { level: 'info' }
+};
+deepMerge(config, updates);
+// config now contains merged data with all properties preserved and added
+
+// Array replacement (not merging)
+const target2 = { items: [1, 2, 3], meta: { count: 3 } };
+const source2 = { items: [4, 5], meta: { updated: true } };
+deepMerge(target2, source2);
+console.log(target2); 
+// { items: [4, 5], meta: { count: 3, updated: true } }
+// Arrays are replaced, objects are merged
+
+// Path-based merging - merge at specific location
+const userData = {
+  user: {
+    profiles: [
+      { id: 1, transactions: { count: 5 } }
+    ]
+  }
+};
+const transactionData = { total: 100, recent: ['tx1', 'tx2'] };
+deepMerge(userData, transactionData, 'user.profiles.0.transactions');
+// Merges transactionData into userData.user.profiles[0].transactions
+
+// Complex path with arrays and objects
+const app = { 
+  modules: [
+    { name: 'auth', config: { providers: ['google'] } }
+  ] 
+};
+const newProviders = { providers: ['google', 'facebook'], timeout: 5000 };
+deepMerge(app, newProviders, 'modules.0.config');
+// app.modules[0].config now has both old and new providers plus timeout
+
+// Creating missing nested structures
+const emptyTarget = { api: {} };
+const nestedData = { secret: 'abc123', expiry: 3600 };
+deepMerge(emptyTarget, nestedData, 'api.auth.jwt');
+// Creates api.auth.jwt object and merges nestedData into it
+
+// Working with user profiles and settings
+const user = {
+  profile: { name: 'John', preferences: { theme: 'dark' } },
+  activity: { lastLogin: '2025-01-01' }
+};
+const profileUpdates = { age: 30, preferences: { notifications: true } };
+deepMerge(user, profileUpdates, 'profile');
+// user.profile now has name, age, and merged preferences
+
+// Database configuration merging
+const dbConfig = {
+  connections: {
+    primary: { host: 'localhost', port: 5432 },
+    replica: { host: 'replica.local', port: 5432 }
+  }
+};
+const sslConfig = { ssl: true, sslCert: '/path/to/cert' };
+deepMerge(dbConfig, sslConfig, 'connections.primary');
+// Adds SSL configuration to primary database connection
+```
+
+**Key Features:**
+- **Deep Merging** - Recursively merges nested objects while preserving existing properties
+- **Path-Based Merging** - Merge data at specific locations using dot notation paths (e.g., 'user.profile.settings')
+- **Array Index Support** - Navigate through arrays using numeric indices in paths (e.g., 'users.0.profile')
+- **Target Modification** - Modifies and returns the target object (not immutable)
+- **Array Replacement** - Arrays are completely replaced rather than merged element-wise
+- **Type Preservation** - Maintains object types including Date, RegExp, and other built-in types
+- **Path Creation** - Automatically creates missing intermediate objects in the path
+- **Error Handling** - Provides clear error messages for invalid paths and type mismatches
+
+**Use Cases:**
+- **Configuration Management** - Merge environment-specific settings into base configuration
+- **User Profile Updates** - Update specific sections of complex user data structures
+- **API Response Merging** - Combine partial API responses into complete data objects
+- **State Management** - Update specific parts of application state in Redux/similar patterns
+- **Database Updates** - Merge partial updates into existing database records
+- **Settings Management** - Update nested application settings without losing existing preferences
+- **Theme Customization** - Merge custom theme properties into base themes at specific paths
+- **Plugin Configuration** - Merge plugin settings into specific configuration sections
+- **Form Data Processing** - Merge form updates into complex nested data structures
+- **Migration Scripts** - Selectively update parts of data structures during migrations
+
+**Path Syntax:**
+- Use dot notation to navigate object properties: `'user.profile.settings'`
+- Use numeric indices for arrays: `'users.0.profile'` or `'items.2.metadata'`
+- Mix objects and arrays: `'config.databases.0.connection.ssl'`
+- Create missing paths: If intermediate objects don't exist, they will be created
+
+**Array Handling:**
+Unlike object properties which are merged deeply, arrays are completely replaced by the source array. This design choice ensures predictable behavior and avoids complex array merging logic.
+
+```ts
+// Example of array replacement behavior
+const target = { tags: ['old1', 'old2'], info: { version: 1 } };
+const source = { tags: ['new1'], info: { author: 'John' } };
+deepMerge(target, source);
+// Result: { tags: ['new1'], info: { version: 1, author: 'John' } }
 ```
 
 ### jsonCompare
