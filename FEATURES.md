@@ -51,6 +51,9 @@ This document provides detailed documentation for all features available in @and
 - [safeAsync](#safeasync)
 - [PromisePool](#promisepool)
 
+### [Network Utilities](#network-utilities)
+- [BaseApiClient](#baseapiclient)
+
 ---
 
 ## Data Structures
@@ -1399,3 +1402,100 @@ console.log(pool.queuedCount);    // Current queued tasks
 console.log(pool.isAtCapacity);   // Whether pool is at max capacity
 console.log(pool.maxConcurrency); // Pool's concurrency limit
 ```
+
+## Network Utilities
+
+### BaseApiClient
+An abstract base class for creating HTTP API clients with built-in authentication, error handling, and request management. Uses axios under the hood to ensure cross-platform compatibility (works in both Node.js and browser environments).
+
+```ts
+import { BaseApiClient, BaseApiClientConfig } from '@andranik-arakelyan/js-utilities';
+
+// Create a concrete API client by extending BaseApiClient
+class MyApiClient extends BaseApiClient {
+  constructor(config: BaseApiClientConfig) {
+    super(config);
+  }
+
+  // Define your API methods
+  async getUser(userId: number) {
+    return this.request<User>({
+      path: `/users/${userId}`,
+      method: 'GET'
+    });
+  }
+
+  async createUser(userData: CreateUserData) {
+    return this.request<User>({
+      path: '/users',
+      method: 'POST',
+      body: userData
+    });
+  }
+
+  async searchUsers(query: string, page: number = 1, limit: number = 10) {
+    return this.request<UserSearchResults>({
+      path: '/users/search',
+      method: 'GET',
+      query: { q: query, page, limit }
+    });
+  }
+}
+
+// Initialize the client with configuration
+const apiClient = new MyApiClient({
+  baseUrl: 'https://api.example.com',
+  apiToken: 'your-api-token-here',
+  urlPrefix: '/v1'  // Optional: adds /v1 to all requests
+});
+
+// Use the client
+try {
+  const user = await apiClient.getUser(123);
+  console.log('User:', user);
+
+  const results = await apiClient.searchUsers('john', 1, 20);
+  console.log('Search results:', results);
+} catch (error) {
+  console.error('API error:', error.message);
+}
+
+// Integration with other utilities
+import { retry, safeAsync, PromisePool } from '@andranik-arakelyan/js-utilities';
+
+// Retry failed requests
+const userWithRetry = await retry(
+  () => apiClient.getUser(123),
+  { attempts: 3, delay: 1000 }
+);
+
+// Rate limiting with PromisePool
+const pool = new PromisePool(5);
+const userIds = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+const users = await Promise.all(
+  userIds.map(id => pool.execute(() => apiClient.getUser(id)))
+);
+```
+
+**Key Features:**
+- **Axios-Based** - Uses axios for reliable HTTP requests in both Node.js and browsers
+- **Cross-Platform** - Works seamlessly in Node.js and browser environments
+- **Type-Safe** - Full TypeScript generic support for request/response types
+- **Auto Authentication** - Automatically adds Bearer token to all requests
+- **Error Handling** - Centralized error handling with customizable error messages
+- **Query Parameters** - Automatic serialization of query parameters
+- **Request Body** - Automatic JSON serialization of request bodies
+
+**Configuration Options:**
+- `baseUrl` - The base URL of the API (e.g., 'https://api.example.com')
+- `apiToken` - The authentication token (added as 'Bearer' token)
+- `urlPrefix` - Optional prefix for all endpoints (e.g., '/v1', '/api')
+
+**Supported HTTP Methods:**
+GET, POST, PUT, PATCH, DELETE
+
+**Use Cases:**
+- **REST API Clients** - Build type-safe clients for any REST API
+- **Microservices** - Communicate between services with consistent error handling
+- **Third-Party APIs** - Integrate with external APIs (GitHub, Stripe, etc.)
+- **SDK Development** - Build SDKs for your API with TypeScript support

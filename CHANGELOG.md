@@ -8,6 +8,21 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [0.22.0] - 2025-11-26
+
+### Added
+- New network utility class:
+  - `BaseApiClient` abstract class for building HTTP API clients
+  - Powered by axios for cross-platform compatibility (Node.js and browser)
+  - Built-in Bearer token authentication
+  - Automatic JSON serialization for request bodies and responses
+  - Automatic query parameter serialization
+  - Centralized error handling with customizable error messages
+  - Support for all standard HTTP methods (GET, POST, PUT, PATCH, DELETE)
+  - Type-safe generic support for request/response types
+  - Perfect for building REST API clients, SDKs, and microservice communication
+  - Comprehensive test suite with 23 test cases covering all functionality
+
 ## [0.21.0] - 2025-09-02
 
 ### Added
@@ -295,7 +310,8 @@ and this project adheres to [Semantic Versioning].
 [semantic versioning]: https://semver.org/spec/v2.0.0.html
 
 <!-- Versions -->
-[unreleased]: https://github.com/andranikarakelyan/js-utilities/compare/v0.21.0...HEAD
+[unreleased]: https://github.com/andranikarakelyan/js-utilities/compare/v0.22.0...HEAD
+[0.22.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.21.0...v0.22.0
 [0.21.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.20.0...v0.21.0
 [0.20.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.19.0...v0.20.0
 [0.19.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.18.0...v0.19.0
