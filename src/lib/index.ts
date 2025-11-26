@@ -6,3 +6,4 @@ export * from './data-structures';
 export * from './function';
 export * from './object';
 export * from './generator';
+export * from './network';
