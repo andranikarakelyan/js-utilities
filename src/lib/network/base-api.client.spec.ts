@@ -39,6 +39,11 @@ describe('BaseApiClient', () => {
     // Mock axios instance
     mockAxiosInstance = {
       request: jest.fn(),
+      defaults: {
+        headers: {
+          common: {},
+        },
+      },
     };
 
     mockedAxios.create.mockReturnValue(mockAxiosInstance);
@@ -402,6 +407,89 @@ describe('BaseApiClient', () => {
       const result = await client.testRequest({ path: '/test' });
 
       expect(result).toEqual({ success: true, data: { id: 1 } });
+    });
+  });
+
+  describe('setApiToken', () => {
+    it('should update the API token in config', () => {
+      const newToken = 'new-token-456';
+      
+      client.setApiToken(newToken);
+      
+      expect((client as any).config.apiToken).toBe(newToken);
+    });
+
+    it('should update the Authorization header in axios instance', () => {
+      const newToken = 'new-token-789';
+      
+      client.setApiToken(newToken);
+      
+      expect(mockAxiosInstance.defaults.headers.common['Authorization']).toBe(
+        'Bearer new-token-789'
+      );
+    });
+
+    it('should allow making requests with the new token', async () => {
+      const newToken = 'updated-token';
+      const mockResponse = {
+        status: 200,
+        statusText: 'OK',
+        data: { authenticated: true },
+      };
+
+      mockAxiosInstance.request.mockResolvedValue(mockResponse);
+      
+      client.setApiToken(newToken);
+      
+      const result = await client.testRequest({ path: '/protected' });
+
+      expect(result).toEqual({ authenticated: true });
+      expect(mockAxiosInstance.defaults.headers.common['Authorization']).toBe(
+        'Bearer updated-token'
+      );
+    });
+  });
+
+  describe('clearApiToken', () => {
+    it('should clear the API token from config', () => {
+      client.clearApiToken();
+      
+      expect((client as any).config.apiToken).toBe('');
+    });
+
+    it('should remove the Authorization header from axios instance', () => {
+      client.clearApiToken();
+      
+      expect(mockAxiosInstance.defaults.headers.common['Authorization']).toBeUndefined();
+    });
+
+    it('should allow making requests without token after clearing', async () => {
+      const mockResponse = {
+        status: 200,
+        statusText: 'OK',
+        data: { public: true },
+      };
+
+      mockAxiosInstance.request.mockResolvedValue(mockResponse);
+      
+      client.clearApiToken();
+      
+      const result = await client.testRequest({ path: '/public' });
+
+      expect(result).toEqual({ public: true });
+      expect(mockAxiosInstance.defaults.headers.common['Authorization']).toBeUndefined();
+    });
+
+    it('should be able to set a new token after clearing', () => {
+      client.clearApiToken();
+      expect(mockAxiosInstance.defaults.headers.common['Authorization']).toBeUndefined();
+      
+      client.setApiToken('fresh-token');
+      
+      expect((client as any).config.apiToken).toBe('fresh-token');
+      expect(mockAxiosInstance.defaults.headers.common['Authorization']).toBe(
+        'Bearer fresh-token'
+      );
     });
   });
 

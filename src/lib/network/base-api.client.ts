@@ -31,6 +31,25 @@ export abstract class BaseApiClient {
   }
 
   /**
+   * Sets a new API token for authentication.
+   * Updates the Authorization header for all subsequent requests.
+   * @param apiToken The new API token to use
+   */
+  public setApiToken(apiToken: string): void {
+    this.config.apiToken = apiToken;
+    this.axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${apiToken}`;
+  }
+
+  /**
+   * Clears the current API token.
+   * Removes the Authorization header from all subsequent requests.
+   */
+  public clearApiToken(): void {
+    this.config.apiToken = '';
+    delete this.axiosInstance.defaults.headers.common['Authorization'];
+  }
+
+  /**
    * Makes an HTTP request to the API.
    * @template T The expected response type
    * @param options Request configuration options
