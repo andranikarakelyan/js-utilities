@@ -8,6 +8,16 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [0.23.0] - 2026-02-07
+
+### Added
+- Dynamic token management methods for `BaseApiClient`:
+  - `setApiToken(token: string)` method to update API token after client instantiation
+  - `clearApiToken()` method to remove authentication token
+  - Enables token refresh, login/logout flows, and token rotation without recreating client instances
+  - Comprehensive test suite with 8 new test cases (30 total for BaseApiClient)
+  - Added documentation and real-world authentication flow examples to FEATURES.md
+
 ## [0.22.0] - 2025-11-26
 
 ### Added
