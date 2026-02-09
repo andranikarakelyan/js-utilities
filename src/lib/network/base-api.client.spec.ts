@@ -410,86 +410,122 @@ describe('BaseApiClient', () => {
     });
   });
 
-  describe('setApiToken', () => {
-    it('should update the API token in config', () => {
-      const newToken = 'new-token-456';
+  describe('setHeaders', () => {
+    it('should set new headers', () => {
+      client.setHeaders({ 'X-Custom-Header': 'custom-value' });
       
-      client.setApiToken(newToken);
-      
-      expect((client as any).config.apiToken).toBe(newToken);
+      expect(mockAxiosInstance.defaults.headers.common['X-Custom-Header']).toBe('custom-value');
     });
 
-    it('should update the Authorization header in axios instance', () => {
-      const newToken = 'new-token-789';
+    it('should update multiple headers at once', () => {
+      client.setHeaders({
+        'X-Custom-Header': 'custom-value',
+        'X-Another-Header': 'another-value',
+      });
       
-      client.setApiToken(newToken);
+      expect(mockAxiosInstance.defaults.headers.common['X-Custom-Header']).toBe('custom-value');
+      expect(mockAxiosInstance.defaults.headers.common['X-Another-Header']).toBe('another-value');
+    });
+
+    it('should delete headers when set to null', () => {
+      mockAxiosInstance.defaults.headers.common['X-Custom-Header'] = 'original-value';
+      
+      client.setHeaders({ 'X-Custom-Header': null });
+      
+      expect(mockAxiosInstance.defaults.headers.common['X-Custom-Header']).toBeUndefined();
+    });
+
+    it('should delete Authorization header when set to null', () => {
+      client.setHeaders({ 'Authorization': null });
+      
+      expect(mockAxiosInstance.defaults.headers.common['Authorization']).toBeUndefined();
+    });
+
+    it('should allow setting Authorization header as custom string', () => {
+      client.setHeaders({ 'Authorization': 'Bearer new-token-123' });
       
       expect(mockAxiosInstance.defaults.headers.common['Authorization']).toBe(
-        'Bearer new-token-789'
+        'Bearer new-token-123'
       );
     });
 
-    it('should allow making requests with the new token', async () => {
-      const newToken = 'updated-token';
+    it('should allow making requests with updated headers', async () => {
       const mockResponse = {
         status: 200,
         statusText: 'OK',
-        data: { authenticated: true },
+        data: { success: true },
       };
 
       mockAxiosInstance.request.mockResolvedValue(mockResponse);
       
-      client.setApiToken(newToken);
+      client.setHeaders({ 'X-Custom-Header': 'test-value' });
       
-      const result = await client.testRequest({ path: '/protected' });
+      const result = await client.testRequest({ path: '/test' });
 
-      expect(result).toEqual({ authenticated: true });
-      expect(mockAxiosInstance.defaults.headers.common['Authorization']).toBe(
-        'Bearer updated-token'
-      );
+      expect(result).toEqual({ success: true });
+      expect(mockAxiosInstance.defaults.headers.common['X-Custom-Header']).toBe('test-value');
     });
   });
 
-  describe('clearApiToken', () => {
-    it('should clear the API token from config', () => {
-      client.clearApiToken();
-      
-      expect((client as any).config.apiToken).toBe('');
-    });
-
-    it('should remove the Authorization header from axios instance', () => {
-      client.clearApiToken();
-      
-      expect(mockAxiosInstance.defaults.headers.common['Authorization']).toBeUndefined();
-    });
-
-    it('should allow making requests without token after clearing', async () => {
-      const mockResponse = {
-        status: 200,
-        statusText: 'OK',
-        data: { public: true },
+  describe('getHeaders', () => {
+    it('should return the current headers', () => {
+      mockAxiosInstance.defaults.headers.common = {
+        'Authorization': 'Bearer test-token-123',
+        'Content-Type': 'application/json',
       };
 
-      mockAxiosInstance.request.mockResolvedValue(mockResponse);
-      
-      client.clearApiToken();
-      
-      const result = await client.testRequest({ path: '/public' });
+      const headers = client.getHeaders();
 
-      expect(result).toEqual({ public: true });
-      expect(mockAxiosInstance.defaults.headers.common['Authorization']).toBeUndefined();
+      expect(headers['Authorization']).toBe('Bearer test-token-123');
+      expect(headers['Content-Type']).toBe('application/json');
     });
 
-    it('should be able to set a new token after clearing', () => {
-      client.clearApiToken();
-      expect(mockAxiosInstance.defaults.headers.common['Authorization']).toBeUndefined();
-      
-      client.setApiToken('fresh-token');
-      
-      expect((client as any).config.apiToken).toBe('fresh-token');
-      expect(mockAxiosInstance.defaults.headers.common['Authorization']).toBe(
-        'Bearer fresh-token'
-      );
+    it('should return empty object when no headers are set', () => {
+      mockAxiosInstance.defaults.headers.common = {};
+
+      const headers = client.getHeaders();
+
+      expect(headers).toEqual({});
+    });
+
+    it('should filter out undefined values', () => {
+      mockAxiosInstance.defaults.headers.common = {
+        'Authorization': 'Bearer test-token-123',
+        'X-Undefined-Header': undefined,
+      };
+
+      const headers = client.getHeaders();
+
+      expect(headers['Authorization']).toBe('Bearer test-token-123');
+      expect(headers['X-Undefined-Header']).toBeUndefined();
+    });
+
+    it('should return a copy of headers (not reference)', () => {
+      mockAxiosInstance.defaults.headers.common = {
+        'X-Test': 'test-value',
+      };
+
+      const headers = client.getHeaders();
+      headers['X-Test'] = 'modified';
+
+      expect(mockAxiosInstance.defaults.headers.common['X-Test']).toBe('test-value');
+    });
+
+    it('should work with setHeaders', () => {
+      client.setHeaders({
+        'X-Custom': 'custom-value',
+        'X-Another': 'another-value',
+      });
+
+      mockAxiosInstance.defaults.headers.common = {
+        'X-Custom': 'custom-value',
+        'X-Another': 'another-value',
+      };
+
+      const headers = client.getHeaders();
+
+      expect(headers['X-Custom']).toBe('custom-value');
+      expect(headers['X-Another']).toBe('another-value');
     });
   });
 

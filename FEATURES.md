@@ -1460,21 +1460,27 @@ try {
   console.error('API error:', error.message);
 }
 
-// Dynamic token management
-// Set a new API token (useful for token refresh scenarios)
-apiClient.setApiToken('new-refreshed-token');
+// Dynamic header management
+// Set custom headers
+apiClient.setHeaders({
+  'Authorization': 'Bearer new-refreshed-token',
+  'X-Request-ID': 'unique-request-id-123'
+});
 
-// Clear the token (useful for logout scenarios)
-apiClient.clearApiToken();
+// Get current headers
+const currentHeaders = apiClient.getHeaders();
+console.log('Current headers:', currentHeaders);
 
-// Set a token again after clearing
-apiClient.setApiToken('another-token-after-login');
+// Delete a header by setting it to null
+apiClient.setHeaders({
+  'Authorization': null  // Removes the Authorization header
+});
 
-// Token lifecycle example (login/logout flow)
+// Header lifecycle example (login/logout flow)
 class AuthenticatedApiClient extends BaseApiClient {
   async login(username: string, password: string) {
-    // Clear any existing token first
-    this.clearApiToken();
+    // Clear any existing Authorization header first
+    this.setHeaders({ 'Authorization': null });
     
     const response = await this.request<{ token: string }>({
       path: '/auth/login',
@@ -1482,8 +1488,8 @@ class AuthenticatedApiClient extends BaseApiClient {
       body: { username, password }
     });
     
-    // Set the new token for subsequent requests
-    this.setApiToken(response.token);
+    // Set the new Authorization header for subsequent requests
+    this.setHeaders({ 'Authorization': `Bearer ${response.token}` });
     
     return response;
   }
@@ -1494,8 +1500,8 @@ class AuthenticatedApiClient extends BaseApiClient {
       method: 'POST'
     });
     
-    // Clear the token after logout
-    this.clearApiToken();
+    // Clear the Authorization header after logout
+    this.setHeaders({ 'Authorization': null });
   }
   
   async refreshToken(refreshToken: string) {
@@ -1505,10 +1511,15 @@ class AuthenticatedApiClient extends BaseApiClient {
       body: { refreshToken }
     });
     
-    // Update the token without creating a new client instance
-    this.setApiToken(response.token);
+    // Update the Authorization header without creating a new client instance
+    this.setHeaders({ 'Authorization': `Bearer ${response.token}` });
     
     return response;
+  }
+  
+  // Add custom headers for specific use cases
+  async setRequestID(requestId: string) {
+    this.setHeaders({ 'X-Request-ID': requestId });
   }
 }
 
@@ -1533,20 +1544,20 @@ const users = await Promise.all(
 - **Axios-Based** - Uses axios for reliable HTTP requests in both Node.js and browsers
 - **Cross-Platform** - Works seamlessly in Node.js and browser environments
 - **Type-Safe** - Full TypeScript generic support for request/response types
-- **Auto Authentication** - Automatically adds Bearer token to all requests
-- **Dynamic Token Management** - Update or clear tokens without recreating the client instance
+- **Flexible Header Management** - Easily set, get, and delete any HTTP headers
+- **Dynamic Header Updates** - Update headers without recreating the client instance
 - **Error Handling** - Centralized error handling with customizable error messages
 - **Query Parameters** - Automatic serialization of query parameters
 - **Request Body** - Automatic JSON serialization of request bodies
 
 **Configuration Options:**
 - `baseUrl` - The base URL of the API (e.g., 'https://api.example.com')
-- `apiToken` - The authentication token (added as 'Bearer' token)
+- `apiToken` - The authentication token (added as 'Bearer' token in Authorization header)
 - `urlPrefix` - Optional prefix for all endpoints (e.g., '/v1', '/api')
 
-**Token Management Methods:**
-- `setApiToken(token: string)` - Updates the API token for all subsequent requests
-- `clearApiToken()` - Removes the authentication token from all requests
+**Header Management Methods:**
+- `setHeaders(headers: Record<string, string | null>)` - Sets or updates headers. Pass `null` to delete a header
+- `getHeaders()` - Returns a copy of all current headers
 
 **Supported HTTP Methods:**
 GET, POST, PUT, PATCH, DELETE
@@ -1557,4 +1568,5 @@ GET, POST, PUT, PATCH, DELETE
 - **Third-Party APIs** - Integrate with external APIs (GitHub, Stripe, etc.)
 - **SDK Development** - Build SDKs for your API with TypeScript support
 - **Authentication Flows** - Handle login/logout and token refresh scenarios
-- **Token Rotation** - Update tokens dynamically without recreating client instances
+- **Custom Headers** - Add any HTTP headers needed (request IDs, API keys, custom authentication, etc.)
+- **Dynamic Configuration** - Update headers and authentication without recreating client instances

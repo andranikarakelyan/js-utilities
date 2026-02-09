@@ -31,22 +31,35 @@ export abstract class BaseApiClient {
   }
 
   /**
-   * Sets a new API token for authentication.
-   * Updates the Authorization header for all subsequent requests.
-   * @param apiToken The new API token to use
+   * Sets headers for all subsequent requests.
+   * Headers with null values will be deleted.
+   * @param headers Object containing headers to set. Use null to delete a header.
    */
-  public setApiToken(apiToken: string): void {
-    this.config.apiToken = apiToken;
-    this.axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${apiToken}`;
+  public setHeaders(headers: Record<string, string | null>): void {
+    for (const [key, value] of Object.entries(headers)) {
+      if (value === null) {
+        delete this.axiosInstance.defaults.headers.common[key];
+      } else {
+        this.axiosInstance.defaults.headers.common[key] = value;
+      }
+    }
   }
 
   /**
-   * Clears the current API token.
-   * Removes the Authorization header from all subsequent requests.
+   * Gets the current headers.
+   * @returns Object containing all current headers
    */
-  public clearApiToken(): void {
-    this.config.apiToken = '';
-    delete this.axiosInstance.defaults.headers.common['Authorization'];
+  public getHeaders(): Record<string, string> {
+    const headers = this.axiosInstance.defaults.headers.common;
+    const result: Record<string, string> = {};
+    
+    for (const [key, value] of Object.entries(headers)) {
+      if (value !== undefined && value !== null) {
+        result[key] = String(value);
+      }
+    }
+    
+    return result;
   }
 
   /**
