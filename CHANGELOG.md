@@ -8,6 +8,22 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [0.23.2] - 2026-02-09
+
+### Changed
+- **BaseApiClient** header management improvements:
+  - Removed deprecated `apiToken` from `BaseApiClientConfig`
+  - Changed header storage from axios defaults to client instance for better reliability
+  - Headers now passed explicitly with each request instead of relying on axios defaults
+  - This ensures headers are consistently sent and can be reliably tested with real servers
+- Enhanced JSDoc documentation with comprehensive examples for all public methods
+- Added integration tests with real HTTP server (21 new test cases):
+  - Tests verify headers are actually received by server
+  - Covers setting, updating, and removing headers
+  - Tests header persistence across multiple requests
+  - Tests different HTTP methods with custom headers
+  - All 385 tests passing (31 test suites)
+
 ## [0.23.1] - 2026-02-09
 
 ### Changed
