@@ -8,6 +8,17 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [0.23.1] - 2026-02-09
+
+### Changed
+- Refactored `BaseApiClient` header management:
+  - Replaced `setApiToken(token: string)` with flexible `setHeaders(headers: Record<string, string | null>)` method
+  - Replaced `clearApiToken()` functionality with null value support in `setHeaders()`
+  - Added `getHeaders()` method to retrieve current headers
+  - Support for setting, updating, and deleting any HTTP headers
+  - Updated all tests to reflect new header management API (34 total test cases)
+  - Updated FEATURES.md documentation with new header management examples and use cases
+
 ## [0.23.0] - 2026-02-07
 
 ### Added
@@ -320,7 +331,8 @@ and this project adheres to [Semantic Versioning].
 [semantic versioning]: https://semver.org/spec/v2.0.0.html
 
 <!-- Versions -->
-[unreleased]: https://github.com/andranikarakelyan/js-utilities/compare/v0.23.0...HEAD
+[unreleased]: https://github.com/andranikarakelyan/js-utilities/compare/v0.23.1...HEAD
+[0.23.1]: https://github.com/andranikarakelyan/js-utilities/compare/v0.23.0...v0.23.1
 [0.23.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.22.0...v0.23.0
 [0.22.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.21.0...v0.22.0
 [0.21.0]: https://github.com/andranikarakelyan/js-utilities/compare/v0.20.0...v0.21.0
