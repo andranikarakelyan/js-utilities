@@ -28,7 +28,6 @@ describe('BaseApiClient', () => {
 
   const config: BaseApiClientConfig = {
     baseUrl: 'https://api.example.com',
-    apiToken: 'test-token-123',
     urlPrefix: '/v1',
   };
 
@@ -56,27 +55,18 @@ describe('BaseApiClient', () => {
     it('should create axios instance with correct base URL', () => {
       expect(mockedAxios.create).toHaveBeenCalledWith({
         baseURL: 'https://api.example.com/v1',
-        headers: {
-          'Authorization': 'Bearer test-token-123',
-          'Content-Type': 'application/json',
-        },
       });
     });
 
     it('should create axios instance without urlPrefix when not provided', () => {
       const configWithoutPrefix: BaseApiClientConfig = {
         baseUrl: 'https://api.example.com',
-        apiToken: 'test-token-123',
       };
 
       new TestApiClient(configWithoutPrefix);
 
       expect(mockedAxios.create).toHaveBeenCalledWith({
         baseURL: 'https://api.example.com',
-        headers: {
-          'Authorization': 'Bearer test-token-123',
-          'Content-Type': 'application/json',
-        },
       });
     });
   });
@@ -101,6 +91,9 @@ describe('BaseApiClient', () => {
         method: 'GET',
         params: undefined,
         data: undefined,
+        headers: {
+          'Content-Type': 'application/json',
+        },
       });
 
       expect(result).toEqual({ id: 1, name: 'Test' });
@@ -128,6 +121,9 @@ describe('BaseApiClient', () => {
         method: 'POST',
         params: undefined,
         data: requestBody,
+        headers: {
+          'Content-Type': 'application/json',
+        },
       });
 
       expect(result).toEqual({ id: 2, name: 'New User' });
@@ -152,6 +148,9 @@ describe('BaseApiClient', () => {
         method: 'GET',
         params: { page: 1, limit: 10, search: 'test' },
         data: undefined,
+        headers: {
+          'Content-Type': 'application/json',
+        },
       });
     });
 
@@ -174,6 +173,9 @@ describe('BaseApiClient', () => {
         method: 'GET',
         params: { page: 1, search: undefined },
         data: undefined,
+        headers: {
+          'Content-Type': 'application/json',
+        },
       });
     });
 
@@ -197,6 +199,9 @@ describe('BaseApiClient', () => {
         method: 'PUT',
         params: undefined,
         data: { name: 'Updated' },
+        headers: {
+          'Content-Type': 'application/json',
+        },
       });
 
       expect(result).toEqual({ id: 1, name: 'Updated' });
@@ -222,6 +227,9 @@ describe('BaseApiClient', () => {
         method: 'PATCH',
         params: undefined,
         data: { name: 'Patched' },
+        headers: {
+          'Content-Type': 'application/json',
+        },
       });
     });
 
@@ -244,6 +252,9 @@ describe('BaseApiClient', () => {
         method: 'DELETE',
         params: undefined,
         data: undefined,
+        headers: {
+          'Content-Type': 'application/json',
+        },
       });
     });
 
@@ -265,6 +276,9 @@ describe('BaseApiClient', () => {
         method: 'GET',
         params: undefined,
         data: undefined,
+        headers: {
+          'Content-Type': 'application/json',
+        },
       });
     });
   });
@@ -414,7 +428,8 @@ describe('BaseApiClient', () => {
     it('should set new headers', () => {
       client.setHeaders({ 'X-Custom-Header': 'custom-value' });
       
-      expect(mockAxiosInstance.defaults.headers.common['X-Custom-Header']).toBe('custom-value');
+      const headers = client.getHeaders();
+      expect(headers['X-Custom-Header']).toBe('custom-value');
     });
 
     it('should update multiple headers at once', () => {
@@ -423,30 +438,31 @@ describe('BaseApiClient', () => {
         'X-Another-Header': 'another-value',
       });
       
-      expect(mockAxiosInstance.defaults.headers.common['X-Custom-Header']).toBe('custom-value');
-      expect(mockAxiosInstance.defaults.headers.common['X-Another-Header']).toBe('another-value');
+      const headers = client.getHeaders();
+      expect(headers['X-Custom-Header']).toBe('custom-value');
+      expect(headers['X-Another-Header']).toBe('another-value');
     });
 
     it('should delete headers when set to null', () => {
-      mockAxiosInstance.defaults.headers.common['X-Custom-Header'] = 'original-value';
-      
+      client.setHeaders({ 'X-Custom-Header': 'original-value' });
       client.setHeaders({ 'X-Custom-Header': null });
       
-      expect(mockAxiosInstance.defaults.headers.common['X-Custom-Header']).toBeUndefined();
+      const headers = client.getHeaders();
+      expect(headers['X-Custom-Header']).toBeUndefined();
     });
 
     it('should delete Authorization header when set to null', () => {
       client.setHeaders({ 'Authorization': null });
       
-      expect(mockAxiosInstance.defaults.headers.common['Authorization']).toBeUndefined();
+      const headers = client.getHeaders();
+      expect(headers['Authorization']).toBeUndefined();
     });
 
     it('should allow setting Authorization header as custom string', () => {
       client.setHeaders({ 'Authorization': 'Bearer new-token-123' });
       
-      expect(mockAxiosInstance.defaults.headers.common['Authorization']).toBe(
-        'Bearer new-token-123'
-      );
+      const headers = client.getHeaders();
+      expect(headers['Authorization']).toBe('Bearer new-token-123');
     });
 
     it('should allow making requests with updated headers', async () => {
@@ -463,52 +479,58 @@ describe('BaseApiClient', () => {
       const result = await client.testRequest({ path: '/test' });
 
       expect(result).toEqual({ success: true });
-      expect(mockAxiosInstance.defaults.headers.common['X-Custom-Header']).toBe('test-value');
+      expect(mockAxiosInstance.request).toHaveBeenCalledWith(
+        expect.objectContaining({
+          headers: expect.objectContaining({
+            'X-Custom-Header': 'test-value',
+          }),
+        })
+      );
     });
   });
 
   describe('getHeaders', () => {
     it('should return the current headers', () => {
-      mockAxiosInstance.defaults.headers.common = {
-        'Authorization': 'Bearer test-token-123',
-        'Content-Type': 'application/json',
-      };
+      client.setHeaders({
+        'X-Custom-Header': 'custom-value',
+      });
 
       const headers = client.getHeaders();
 
-      expect(headers['Authorization']).toBe('Bearer test-token-123');
+      expect(headers['Content-Type']).toBe('application/json');
+      expect(headers['X-Custom-Header']).toBe('custom-value');
+    });
+
+    it('should return default headers when no custom headers are set', () => {
+      const headers = client.getHeaders();
+
       expect(headers['Content-Type']).toBe('application/json');
     });
 
-    it('should return empty object when no headers are set', () => {
-      mockAxiosInstance.defaults.headers.common = {};
+    it('should filter out null values', () => {
+      client.setHeaders({
+        'X-Custom-Header': 'custom-value',
+      });
+      client.setHeaders({
+        'X-Custom-Header': null,
+      });
 
       const headers = client.getHeaders();
 
-      expect(headers).toEqual({});
-    });
-
-    it('should filter out undefined values', () => {
-      mockAxiosInstance.defaults.headers.common = {
-        'Authorization': 'Bearer test-token-123',
-        'X-Undefined-Header': undefined,
-      };
-
-      const headers = client.getHeaders();
-
-      expect(headers['Authorization']).toBe('Bearer test-token-123');
-      expect(headers['X-Undefined-Header']).toBeUndefined();
+      expect(headers['X-Custom-Header']).toBeUndefined();
+      expect(headers['Content-Type']).toBe('application/json');
     });
 
     it('should return a copy of headers (not reference)', () => {
-      mockAxiosInstance.defaults.headers.common = {
+      client.setHeaders({
         'X-Test': 'test-value',
-      };
+      });
 
       const headers = client.getHeaders();
       headers['X-Test'] = 'modified';
 
-      expect(mockAxiosInstance.defaults.headers.common['X-Test']).toBe('test-value');
+      const headersCopy = client.getHeaders();
+      expect(headersCopy['X-Test']).toBe('test-value');
     });
 
     it('should work with setHeaders', () => {
@@ -517,15 +539,11 @@ describe('BaseApiClient', () => {
         'X-Another': 'another-value',
       });
 
-      mockAxiosInstance.defaults.headers.common = {
-        'X-Custom': 'custom-value',
-        'X-Another': 'another-value',
-      };
-
       const headers = client.getHeaders();
 
       expect(headers['X-Custom']).toBe('custom-value');
       expect(headers['X-Another']).toBe('another-value');
+      expect(headers['Content-Type']).toBe('application/json');
     });
   });
 
@@ -591,6 +609,9 @@ describe('BaseApiClient', () => {
         method: 'GET',
         params: { page: 5, limit: 20, offset: 100 },
         data: undefined,
+        headers: {
+          'Content-Type': 'application/json',
+        },
       });
     });
   });

@@ -2,76 +2,165 @@ import axios, { AxiosInstance, AxiosResponse } from 'axios';
 
 /**
  * Configuration options for the BaseApiClient.
+ * 
+ * @interface BaseApiClientConfig
+ * @property {string} baseUrl - The base URL for all API requests
+ * @property {string} [urlPrefix] - Optional URL prefix to append to baseUrl (e.g., '/v1' for versioning)
+ * 
+ * @example
+ * const config: BaseApiClientConfig = {
+ *   baseUrl: 'https://api.example.com',
+ *   urlPrefix: '/v1'
+ * };
  */
 export interface BaseApiClientConfig {
   baseUrl: string;
-  apiToken: string;
   urlPrefix?: string;
 }
 
 /**
  * Base API client class providing common request handling functionality.
  * All specific API clients should extend this class.
+ * 
+ * This class manages HTTP requests using axios and maintains custom headers
+ * that are sent with every request. Headers are stored in the client instance
+ * (not in axios defaults) for better reliability and explicit control.
+ * 
+ * @abstract
+ * @class BaseApiClient
+ * 
+ * @example
+ * class UserApiClient extends BaseApiClient {
+ *   async getUser(id: number) {
+ *     return this.request({
+ *       path: `/users/${id}`,
+ *       method: 'GET'
+ *     });
+ *   }
+ * }
+ * 
+ * const client = new UserApiClient({
+ *   baseUrl: 'https://api.example.com',
+ *   urlPrefix: '/v1'
+ * });
+ * 
+ * client.setHeaders({ 'Authorization': 'Bearer token123' });
+ * const user = await client.getUser(1);
  */
 export abstract class BaseApiClient {
   protected axiosInstance: AxiosInstance;
+  protected customHeaders: Record<string, string> = {};
 
   /**
    * Creates a new base API client instance.
-   * @param config The configuration options for the API client
+   * 
+   * Initializes the axios instance with the provided configuration and
+   * sets up default headers (Content-Type: application/json).
+   * Headers are managed in the client instance for explicit control.
+   * 
+   * @param {BaseApiClientConfig} config - The configuration options for the API client
+   * @param {string} config.baseUrl - The base URL for all API requests
+   * @param {string} [config.urlPrefix] - Optional URL prefix (e.g., '/v1')
+   * 
+   * @example
+   * constructor(config: BaseApiClientConfig) {
+   *   super(config);
+   * }
    */
   constructor(protected config: BaseApiClientConfig) {
     this.axiosInstance = axios.create({
       baseURL: `${config.baseUrl}${config.urlPrefix || ''}`,
-      headers: {
-        'Authorization': `Bearer ${config.apiToken}`,
-        'Content-Type': 'application/json',
-      },
     });
+
+    // Initialize custom headers with default header
+    this.customHeaders = {
+      'Content-Type': 'application/json',
+    };
   }
 
   /**
    * Sets headers for all subsequent requests.
-   * Headers with null values will be deleted.
-   * @param headers Object containing headers to set. Use null to delete a header.
+   * 
+   * Headers are stored in the client instance and passed explicitly with each request.
+   * This provides better reliability compared to using axios default headers.
+   * Headers set to null will be deleted.
+   * 
+   * @param {Record<string, string | null>} headers - Object containing headers to set.
+   *        Use null as a value to delete a header.
+   * 
+   * @example
+   * // Set custom headers
+   * client.setHeaders({
+   *   'X-Request-Id': 'req-123',
+   *   'Authorization': 'Bearer token123'
+   * });
+   * 
+   * // Remove a header
+   * client.setHeaders({ 'X-Request-Id': null });
    */
   public setHeaders(headers: Record<string, string | null>): void {
     for (const [key, value] of Object.entries(headers)) {
       if (value === null) {
-        delete this.axiosInstance.defaults.headers.common[key];
+        delete this.customHeaders[key];
       } else {
-        this.axiosInstance.defaults.headers.common[key] = value;
+        this.customHeaders[key] = value;
       }
     }
   }
 
   /**
    * Gets the current headers.
-   * @returns Object containing all current headers
+   * 
+   * Returns a copy of all current headers stored in the client instance.
+   * This includes default headers (Content-Type) and any custom headers set via setHeaders().
+   * 
+   * @returns {Record<string, string>} A copy of all current headers
+   * 
+   * @example
+   * const headers = client.getHeaders();
+   * console.log(headers['Content-Type']); // 'application/json'
+   * console.log(headers['Authorization']); // 'Bearer token123' (if set)
    */
   public getHeaders(): Record<string, string> {
-    const headers = this.axiosInstance.defaults.headers.common;
-    const result: Record<string, string> = {};
-    
-    for (const [key, value] of Object.entries(headers)) {
-      if (value !== undefined && value !== null) {
-        result[key] = String(value);
-      }
-    }
-    
-    return result;
+    return { ...this.customHeaders };
   }
 
   /**
    * Makes an HTTP request to the API.
-   * @template T The expected response type
-   * @param options Request configuration options
-   * @param options.path The API endpoint path
-   * @param options.query Optional query parameters
-   * @param options.body Optional request body
-   * @param options.method HTTP method (defaults to GET)
-   * @returns The parsed response data
-   * @throws {Error} If the request fails or returns an error response
+   * 
+   * Sends a request to the API with the specified configuration and current headers.
+   * Headers are explicitly passed with each request for reliable header management.
+   * Handles both successful responses and axios errors.
+   * 
+   * @template T The expected response data type
+   * @param {Object} options - Request configuration options
+   * @param {string} options.path - The API endpoint path (e.g., '/users/1')
+   * @param {Record<string, string | number | undefined>} [options.query] - Optional query parameters
+   * @param {any} [options.body] - Optional request body for POST/PUT/PATCH requests
+   * @param {string} [options.method='GET'] - HTTP method (GET, POST, PUT, PATCH, DELETE)
+   * @returns {Promise<T>} The parsed response data
+   * @throws {Error} If the request fails, returns an error status code, or response has success: false
+   * 
+   * @example
+   * // GET request
+   * const user = await this.request({
+   *   path: '/users/1',
+   *   method: 'GET'
+   * });
+   * 
+   * // POST request with body
+   * const newUser = await this.request({
+   *   path: '/users',
+   *   method: 'POST',
+   *   body: { name: 'John', email: 'john@example.com' }
+   * });
+   * 
+   * // GET with query parameters
+   * const users = await this.request({
+   *   path: '/users',
+   *   method: 'GET',
+   *   query: { page: 1, limit: 10 }
+   * });
    */
   protected async request<T>(options: {
     path: string;
@@ -87,6 +176,7 @@ export abstract class BaseApiClient {
         method,
         params: query,
         data: body,
+        headers: this.customHeaders,
       });
 
       return this.handleResponse<T>(response);
@@ -100,10 +190,37 @@ export abstract class BaseApiClient {
 
   /**
    * Handles API response parsing and error checking.
-   * @template T The expected response type
-   * @param response The axios Response object
-   * @returns The parsed and validated response data
+   * 
+   * Validates the response status code and checks for error indicators in the response data.
+   * Supports two error patterns:
+   * 1. HTTP error status codes (< 200 or >= 300)
+   * 2. JSON response with success: false field
+   * 
+   * Priority for error messages: error field > message field > statusText
+   * 
+   * @template T The expected response data type
+   * @param {AxiosResponse} response - The axios Response object
+   * @returns {T} The parsed and validated response data
    * @throws {Error} If the response indicates an error or has success: false
+   * 
+   * @example
+   * // Successful response
+   * const data = handleResponse({ status: 200, data: { id: 1, name: 'John' } });
+   * 
+   * // Error with success: false
+   * // throws Error('Operation failed')
+   * const data = handleResponse({
+   *   status: 200,
+   *   data: { success: false, error: 'Operation failed' }
+   * });
+   * 
+   * // HTTP error status
+   * // throws Error('Not Found')
+   * const data = handleResponse({
+   *   status: 404,
+   *   statusText: 'Not Found',
+   *   data: { error: 'Resource not found' }
+   * });
    */
   protected handleResponse<T>(response: AxiosResponse): T {
     const data = response.data;

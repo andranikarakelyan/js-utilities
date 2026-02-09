@@ -1406,7 +1406,9 @@ console.log(pool.maxConcurrency); // Pool's concurrency limit
 ## Network Utilities
 
 ### BaseApiClient
-An abstract base class for creating HTTP API clients with built-in authentication, error handling, and request management. Uses axios under the hood to ensure cross-platform compatibility (works in both Node.js and browser environments).
+An abstract base class for creating HTTP API clients with built-in header management, error handling, and request management. Uses axios under the hood to ensure cross-platform compatibility (works in both Node.js and browser environments).
+
+Headers are managed directly in the client instance for better reliability and explicit control. This ensures headers are consistently sent with every request.
 
 ```ts
 import { BaseApiClient, BaseApiClientConfig } from '@andranik-arakelyan/js-utilities';
@@ -1445,8 +1447,13 @@ class MyApiClient extends BaseApiClient {
 // Initialize the client with configuration
 const apiClient = new MyApiClient({
   baseUrl: 'https://api.example.com',
-  apiToken: 'your-api-token-here',
   urlPrefix: '/v1'  // Optional: adds /v1 to all requests
+});
+
+// Set custom headers (includes default Content-Type: application/json)
+apiClient.setHeaders({
+  'Authorization': 'Bearer your-token-here',
+  'X-Request-ID': 'unique-request-id-123'
 });
 
 // Use the client
@@ -1461,19 +1468,19 @@ try {
 }
 
 // Dynamic header management
-// Set custom headers
-apiClient.setHeaders({
-  'Authorization': 'Bearer new-refreshed-token',
-  'X-Request-ID': 'unique-request-id-123'
-});
-
 // Get current headers
 const currentHeaders = apiClient.getHeaders();
 console.log('Current headers:', currentHeaders);
+// Output: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ...', ... }
+
+// Update specific header
+apiClient.setHeaders({
+  'Authorization': 'Bearer new-refreshed-token'
+});
 
 // Delete a header by setting it to null
 apiClient.setHeaders({
-  'Authorization': null  // Removes the Authorization header
+  'X-Request-ID': null  // Removes the X-Request-ID header
 });
 
 // Header lifecycle example (login/logout flow)
@@ -1544,20 +1551,20 @@ const users = await Promise.all(
 - **Axios-Based** - Uses axios for reliable HTTP requests in both Node.js and browsers
 - **Cross-Platform** - Works seamlessly in Node.js and browser environments
 - **Type-Safe** - Full TypeScript generic support for request/response types
-- **Flexible Header Management** - Easily set, get, and delete any HTTP headers
-- **Dynamic Header Updates** - Update headers without recreating the client instance
+- **Reliable Header Management** - Headers stored in client instance for consistent delivery with every request
+- **Dynamic Header Updates** - Update, add, or remove headers without recreating the client instance
 - **Error Handling** - Centralized error handling with customizable error messages
 - **Query Parameters** - Automatic serialization of query parameters
 - **Request Body** - Automatic JSON serialization of request bodies
+- **Default Headers** - Automatically includes Content-Type: application/json
 
 **Configuration Options:**
 - `baseUrl` - The base URL of the API (e.g., 'https://api.example.com')
-- `apiToken` - The authentication token (added as 'Bearer' token in Authorization header)
 - `urlPrefix` - Optional prefix for all endpoints (e.g., '/v1', '/api')
 
 **Header Management Methods:**
-- `setHeaders(headers: Record<string, string | null>)` - Sets or updates headers. Pass `null` to delete a header
-- `getHeaders()` - Returns a copy of all current headers
+- `setHeaders(headers: Record<string, string | null>)` - Sets or updates headers. Pass `null` to delete a header. Changes apply to all subsequent requests.
+- `getHeaders()` - Returns a copy of all current headers including defaults
 
 **Supported HTTP Methods:**
 GET, POST, PUT, PATCH, DELETE
@@ -1570,3 +1577,5 @@ GET, POST, PUT, PATCH, DELETE
 - **Authentication Flows** - Handle login/logout and token refresh scenarios
 - **Custom Headers** - Add any HTTP headers needed (request IDs, API keys, custom authentication, etc.)
 - **Dynamic Configuration** - Update headers and authentication without recreating client instances
+- **Token Rotation** - Seamlessly update bearer tokens or API keys during runtime
+
