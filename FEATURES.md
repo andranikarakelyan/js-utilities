@@ -1547,6 +1547,25 @@ const users = await Promise.all(
 );
 ```
 
+**Error Handling with Response Data:**
+When the API throws an error, the complete server response is bound to the Error instance via the `response` property, allowing access to structured error data:
+
+```ts
+try {
+  await apiClient.createUser({ name: 'John' });
+} catch (error: any) {
+  console.log(error.message);           // 'Validation Error'
+  console.log(error.response.code);     // 'VALIDATION_ERROR'
+  console.log(error.response.errors);   // [{ field: 'email', message: 'Email required' }]
+  
+  // Use error details for recovery strategies
+  if (error.response?.code === 'AUTH_FAILED') {
+    // Handle authentication failure
+    await apiClient.refreshToken();
+  }
+}
+```
+
 **Key Features:**
 - **Axios-Based** - Uses axios for reliable HTTP requests in both Node.js and browsers
 - **Cross-Platform** - Works seamlessly in Node.js and browser environments

@@ -132,6 +132,9 @@ export abstract class BaseApiClient {
    * Headers are explicitly passed with each request for reliable header management.
    * Handles both successful responses and axios errors.
    * 
+   * When an error occurs, the full response data is bound to the Error instance via the 
+   * `response` property, allowing access to structured error information from the server.
+   * 
    * @template T The expected response data type
    * @param {Object} options - Request configuration options
    * @param {string} options.path - The API endpoint path (e.g., '/users/1')
@@ -139,7 +142,8 @@ export abstract class BaseApiClient {
    * @param {any} [options.body] - Optional request body for POST/PUT/PATCH requests
    * @param {string} [options.method='GET'] - HTTP method (GET, POST, PUT, PATCH, DELETE)
    * @returns {Promise<T>} The parsed response data
-   * @throws {Error} If the request fails, returns an error status code, or response has success: false
+   * @throws {Error} If the request fails, returns an error status code, or response has success: false.
+   *         The error object will have a `response` property containing the full error response data.
    * 
    * @example
    * // GET request
@@ -148,12 +152,14 @@ export abstract class BaseApiClient {
    *   method: 'GET'
    * });
    * 
-   * // POST request with body
-   * const newUser = await this.request({
-   *   path: '/users',
-   *   method: 'POST',
-   *   body: { name: 'John', email: 'john@example.com' }
-   * });
+   * // Handling errors with structured error data
+   * try {
+   *   await this.request({ path: '/users', method: 'POST', body: data });
+   * } catch (error: any) {
+   *   console.log(error.message);           // 'Validation Error'
+   *   console.log(error.response.code);     // 'VALIDATION_ERROR'
+   *   console.log(error.response.errors);   // array of field errors
+   * }
    * 
    * // GET with query parameters
    * const users = await this.request({
@@ -198,40 +204,56 @@ export abstract class BaseApiClient {
    * 
    * Priority for error messages: error field > message field > statusText
    * 
+   * When an error is thrown, the response data is bound to the Error instance via the 
+   * `response` property, making the full error details accessible to callers.
+   * 
    * @template T The expected response data type
    * @param {AxiosResponse} response - The axios Response object
    * @returns {T} The parsed and validated response data
-   * @throws {Error} If the response indicates an error or has success: false
+   * @throws {Error} If the response indicates an error or has success: false.
+   *         The error object will have a `response` property containing the response data.
    * 
    * @example
    * // Successful response
    * const data = handleResponse({ status: 200, data: { id: 1, name: 'John' } });
    * 
    * // Error with success: false
-   * // throws Error('Operation failed')
+   * // throws Error('Operation failed') with error.response = { success: false, error: 'Operation failed', ... }
    * const data = handleResponse({
    *   status: 200,
    *   data: { success: false, error: 'Operation failed' }
    * });
    * 
    * // HTTP error status
-   * // throws Error('Not Found')
+   * // throws Error('Not Found') with error.response = { error: 'Resource not found', code: 'NOT_FOUND', ... }
    * const data = handleResponse({
    *   status: 404,
    *   statusText: 'Not Found',
-   *   data: { error: 'Resource not found' }
+   *   data: { error: 'Resource not found', code: 'NOT_FOUND' }
    * });
+   * 
+   * // Usage:
+   * // try {
+   * //   await client.getUser(1);
+   * // } catch (error: any) {
+   * //   console.log(error.message); // 'Not Found'
+   * //   console.log(error.response); // { error: 'Resource not found', code: 'NOT_FOUND', ... }
+   * // }
    */
   protected handleResponse<T>(response: AxiosResponse): T {
     const data = response.data;
 
     if (response.status < 200 || response.status >= 300) {
       const errorMessage = data?.error || data?.message || response.statusText;
-      throw new Error(errorMessage);
+      const error = new Error(errorMessage);
+      (error as any).response = data;
+      throw error;
     }
 
     if (data?.success === false) {
-      throw new Error(data.error || "Request failed");
+      const error = new Error(data.error || "Request failed");
+      (error as any).response = data;
+      throw error;
     }
 
     return data as T;
