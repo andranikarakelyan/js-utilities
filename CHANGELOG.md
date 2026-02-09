@@ -8,6 +8,17 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [0.23.3] - 2026-02-09
+
+### Added
+- **BaseApiClient** error response binding:
+  - Error responses now bound to Error instance via `error.response` property
+  - F[0.23.3]: https://github.com/andranikarakelyan/js-utilities/compare/v0.23.2...v0.23.3
+[0.23.2]: https://github.com/andranikarakelyan/js-utilities/compare/v0.23.1...v0.23.2
+[0.23.1]: https://github.com/andranikarakelyan/js-utilities/compare/v0.23.0...v0.23.1l structured error data accessible from server responses
+  - Enables advanced error handling and recovery strategies
+  - Added 139 comprehensive unit and integration tests
+
 ## [0.23.2] - 2026-02-09
 
 ### Changed
